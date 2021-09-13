@@ -2,18 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3498d92-2371-4363-bd2d-126d75e26eb4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/java-run-personal-project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/httpServer/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/httpServer.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpServer/Resources/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Resources/DataBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpServer/Resources/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Resources/Movie.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/httpServer/Resources/Schedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/ProjectHttpHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/ProjectHttpHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httpServer/Server/ProjectHttpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Server/ProjectHttpHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpServer/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +36,9 @@
     </file-type-list>
   </component>
   <component name="ProjectId" id="1y3XlmuOWdmq0G6FYNv7WtDGAYk" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -67,6 +61,19 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="java-run-personal-project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="java-run-personal-project" />
+      <option name="filePath" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -98,5 +105,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

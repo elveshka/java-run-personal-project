@@ -71,6 +71,6 @@ public class ProjectHttpHandler implements HttpHandler {
         out.write(rawResponse);
         out.flush();
         out.close();
-        System.out.println(responseBody);
+        System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
     }
 }
