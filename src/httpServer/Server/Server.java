@@ -19,6 +19,5 @@ public class Server {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-
     }
 }

@@ -22,4 +22,21 @@ public class Movie {
     public String getDirector() {
         return director;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getTitle() {
+        return String.format("Name: %s\nYear: %d\nDirector: %s\n",
+                getName(), getYear(), getDirector());
+    }
 }

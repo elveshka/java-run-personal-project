@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class DataBase {
     private Map<String, Movie> movies = new HashMap<>();
-    private static DataBase db = null;
+    private static DataBase db = null; // Singletone :D
 
     private DataBase() {
         this.movies.put("Titanic", new Movie("Titanic", 1997, "James Cameron"));
@@ -25,6 +25,17 @@ public class DataBase {
     }
 
     public static DataBase getDb() {
+        if (db == null) {
+            db = new DataBase();
+        }
         return db;
     }
+
+    public Map<String, Movie> getMovies() {
+        if (db == null) {
+            db = new DataBase();
+        }
+        return movies;
+    }
+
 }
