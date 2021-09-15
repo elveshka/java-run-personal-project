@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class DataBase {
     private Map<String, Movie> movies = new HashMap<>();
+    private Schedule schedule = new Schedule();
     private static DataBase db = null; // Singletone :D
 
     private DataBase() {
@@ -38,4 +39,7 @@ public class DataBase {
         return movies;
     }
 
+    public Schedule getSchedule() {
+        return schedule;
+    }
 }

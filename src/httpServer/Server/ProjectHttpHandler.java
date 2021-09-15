@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import httpServer.Resources.DataBase;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -23,8 +24,11 @@ public class ProjectHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        System.out.println(exchange.getRequestURI().toString());
         if (exchange.getRequestURI().toString().equals("/")) {
             generateMainPage(exchange);
+        } else if (exchange.getRequestURI().toString().equals("/schedule")) {
+            generateSchedulePage(exchange);
         } else if ("GET".equals(exchange.getRequestMethod())) {
             OutputStream outputstream = exchange.getResponseBody();
             //TODO JSON response
@@ -38,6 +42,8 @@ public class ProjectHttpHandler implements HttpHandler {
             }
             outputstream.flush();
             outputstream.close();
+        } else {
+            exchange.sendResponseHeaders(FORBIDDEN_REQUEST, -1);
         }
     }
 
@@ -55,10 +61,10 @@ public class ProjectHttpHandler implements HttpHandler {
 //        final String responseBody
 //    }
 
-    public void generateMainPage(HttpExchange exchange) throws IOException {
+    private void generateMainPage(HttpExchange exchange) throws IOException {
         DataBase db = DataBase.getDb();
-        final Headers headers = exchange.getResponseHeaders();
-        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+//        final Headers headers = exchange.getResponseHeaders();
+//        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
         final StringBuilder responseBody = new StringBuilder();
         responseBody.append("TOP RATED MOVIES TODAY\n\n");
         for (String name : db.getMovies().keySet()) {
@@ -66,6 +72,19 @@ public class ProjectHttpHandler implements HttpHandler {
             responseBody.append("\n");
         }
         final byte[] rawResponse = responseBody.toString().getBytes(CHARSET);
+        exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
+        OutputStream out = exchange.getResponseBody();
+        out.write(rawResponse);
+        out.flush();
+        out.close();
+        System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
+    }
+
+    private void generateSchedulePage(HttpExchange exchange) throws IOException {
+        DataBase db = DataBase.getDb();
+//        final Headers headers = exchange.getResponseHeaders();
+//        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+        final byte[] rawResponse = ("SCHEDULE\n\n" + db.getSchedule().getSchedule()).getBytes(CHARSET);
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
         out.write(rawResponse);
