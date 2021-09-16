@@ -1,6 +1,5 @@
 package httpServer.Resources;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ public class Schedule {
         sessions.put(19, db.getMovieByName("Green Elephant"));
     }
 
-    public String getSchedule() {
+    public String getScheduleToString() {
         StringBuilder schedule = new StringBuilder();
         for (int time : sessions.keySet()) {
             if (sessions.get(time) != null) {
@@ -27,5 +26,8 @@ public class Schedule {
         return schedule.toString();
     }
 
+    public String getMovieSession(int time) {
+        return sessions.get(time).getTitle();
+    }
     public void setSessions(int time, Movie movie) {}
 }

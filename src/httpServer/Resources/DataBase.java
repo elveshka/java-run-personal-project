@@ -8,8 +8,12 @@ import java.util.Map;
  */
 
 public class DataBase {
+    //tables
     private Map<String, Movie> movies = new HashMap<>();
-    private static final Schedule schedule = new Schedule();
+    private final Schedule schedule = new Schedule();
+//    private final Map<Integer, Map<Movie, Seats> > seats = new HashMap<>();
+
+    //database
     private static DataBase db = null; // Singletone :D
 
     private DataBase() {
@@ -17,11 +21,6 @@ public class DataBase {
         this.movies.put("Austin Powers", new Movie("Austin Powers", 2002, "Jay Roach"));
         this.movies.put("Green Elephant", new Movie("Green Elephant", 1999, "Svetlana Baskova"));
     }
-
-    public Movie getMovieByName(String name) {
-        return db.movies.get(name);
-    }
-
     public static DataBase getDb() {
         if (db == null) {
             db = new DataBase();
@@ -29,10 +28,13 @@ public class DataBase {
         return db;
     }
 
+    //getters
+    public Movie getMovieByName(String name) {
+        return db.movies.get(name);
+    }
     public Map<String, Movie> getMovies() {
         return movies;
     }
-
     public Schedule getSchedule() {
         return schedule;
     }

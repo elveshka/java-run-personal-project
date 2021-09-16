@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import httpServer.Resources.DataBase;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -84,7 +83,7 @@ public class ProjectHttpHandler implements HttpHandler {
         DataBase db = DataBase.getDb();
         final Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-        final byte[] rawResponse = ("SCHEDULE\n\n" + db.getSchedule().getSchedule()).getBytes(CHARSET);
+        final byte[] rawResponse = ("SCHEDULE\n\n" + db.getSchedule().getScheduleToString()).getBytes(CHARSET);
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
         out.write(rawResponse);

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e3498d92-2371-4363-bd2d-126d75e26eb4" name="Changes" comment="fff">
+    <list default="true" id="e3498d92-2371-4363-bd2d-126d75e26eb4" name="Changes" comment="fix static methods and data visibility">
+      <change afterPath="$PROJECT_DIR$/src/httpServer/Resources/Seats.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Resources/DataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Resources/DataBase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Resources/Schedule.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Resources/Schedule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/ProjectHttpHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/ProjectHttpHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/Server.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httpServer/Resources/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Resources/DataBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httpServer/Resources/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Resources/Schedule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httpServer/Server/ProjectHttpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Server/ProjectHttpHandler.java" afterDir="false" />
@@ -87,7 +92,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631715739075</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix static methods and data visibility">
+      <created>1631775642656</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1631775642656</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -104,6 +116,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fff" />
-    <option name="LAST_COMMIT_MESSAGE" value="fff" />
+    <MESSAGE value="fix static methods and data visibility" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix static methods and data visibility" />
   </component>
 </project>
