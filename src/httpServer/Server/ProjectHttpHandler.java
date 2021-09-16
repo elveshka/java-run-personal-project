@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import httpServer.Resources.DataBase;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -71,20 +70,18 @@ public class ProjectHttpHandler implements HttpHandler {
             responseBody.append(db.getMovieByName(name).getName());
             responseBody.append("\n");
         }
-        final byte[] rawResponse = responseBody.toString().getBytes(CHARSET);
-        exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
-        OutputStream out = exchange.getResponseBody();
-        out.write(rawResponse);
-        out.flush();
-        out.close();
-        System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
+        sendResponseBody(exchange, responseBody.toString().getBytes(CHARSET));
     }
 
     private void generateSchedulePage(HttpExchange exchange) throws IOException {
         DataBase db = DataBase.getDb();
         final Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-        final byte[] rawResponse = ("SCHEDULE\n\n" + db.getSchedule().getSchedule()).getBytes(CHARSET);
+        sendResponseBody(exchange, ("SCHEDULE\n\n" + db.getSchedule().getSchedule()).getBytes(CHARSET));
+
+    }
+
+    private void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
         out.write(rawResponse);
