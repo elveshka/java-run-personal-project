@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class DataBase {
     private Map<String, Movie> movies = new HashMap<>();
-    private Schedule schedule = new Schedule();
+    private static final Schedule schedule = new Schedule();
     private static DataBase db = null; // Singletone :D
 
     private DataBase() {
@@ -18,10 +18,7 @@ public class DataBase {
         this.movies.put("Green Elephant", new Movie("Green Elephant", 1999, "Svetlana Baskova"));
     }
 
-    public static Movie getMovieByName(String name) {
-        if (db == null) {
-            db = new DataBase();
-        }
+    public Movie getMovieByName(String name) {
         return db.movies.get(name);
     }
 
@@ -33,9 +30,6 @@ public class DataBase {
     }
 
     public Map<String, Movie> getMovies() {
-        if (db == null) {
-            db = new DataBase();
-        }
         return movies;
     }
 

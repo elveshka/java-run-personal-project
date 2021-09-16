@@ -63,12 +63,12 @@ public class ProjectHttpHandler implements HttpHandler {
 
     private void generateMainPage(HttpExchange exchange) throws IOException {
         DataBase db = DataBase.getDb();
-//        final Headers headers = exchange.getResponseHeaders();
-//        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+        final Headers headers = exchange.getResponseHeaders();
+        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
         final StringBuilder responseBody = new StringBuilder();
         responseBody.append("TOP RATED MOVIES TODAY\n\n");
         for (String name : db.getMovies().keySet()) {
-            responseBody.append(DataBase.getMovieByName(name).getName());
+            responseBody.append(db.getMovieByName(name).getName());
             responseBody.append("\n");
         }
         final byte[] rawResponse = responseBody.toString().getBytes(CHARSET);
@@ -82,8 +82,8 @@ public class ProjectHttpHandler implements HttpHandler {
 
     private void generateSchedulePage(HttpExchange exchange) throws IOException {
         DataBase db = DataBase.getDb();
-//        final Headers headers = exchange.getResponseHeaders();
-//        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+        final Headers headers = exchange.getResponseHeaders();
+        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
         final byte[] rawResponse = ("SCHEDULE\n\n" + db.getSchedule().getSchedule()).getBytes(CHARSET);
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();

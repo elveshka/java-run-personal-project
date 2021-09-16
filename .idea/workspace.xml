@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e3498d92-2371-4363-bd2d-126d75e26eb4" name="Changes" comment="">
+    <list default="true" id="e3498d92-2371-4363-bd2d-126d75e26eb4" name="Changes" comment="fff">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Resources/DataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Resources/DataBase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/ProjectHttpHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/ProjectHttpHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/java-run-personal-project/httpServer/Server/Server.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httpServer/Resources/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Resources/DataBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httpServer/Resources/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Resources/Schedule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httpServer/Server/ProjectHttpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Server/ProjectHttpHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httpServer/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/httpServer/Server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,6 +80,14 @@
       <option name="presentableId" value="Default" />
       <updated>1631481402803</updated>
     </task>
+    <task id="LOCAL-00001" summary="fff">
+      <created>1631715739075</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1631715739075</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -97,5 +101,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fff" />
+    <option name="LAST_COMMIT_MESSAGE" value="fff" />
   </component>
 </project>
