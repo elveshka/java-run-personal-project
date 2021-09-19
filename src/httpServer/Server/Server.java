@@ -4,9 +4,6 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import httpServer.Resources.DataBase;
-import httpServer.Resources.Movie;
-
 public class Server {
 
     private static final String mainPage = "/";

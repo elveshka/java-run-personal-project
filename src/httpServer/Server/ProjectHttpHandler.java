@@ -26,7 +26,7 @@ public class ProjectHttpHandler implements HttpHandler {
         System.out.println(exchange.getRequestURI().toString());
         if (exchange.getRequestURI().toString().equals("/")) {
             generateMainPage(exchange);
-        } else if (exchange.getRequestURI().toString().equals("/schedule")) {
+        } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/schedule")) {
             generateSchedulePage(exchange);
         } else if ("GET".equals(exchange.getRequestMethod())) {
             OutputStream outputstream = exchange.getResponseBody();
@@ -54,22 +54,16 @@ public class ProjectHttpHandler implements HttpHandler {
         return ret;
     }
 
-//    private String generateResponseBody(HttpExchange exchange) {
-//        final Headers headers = exchange.getResponseHeaders();
-//        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-//        final String responseBody
-//    }
-
     private void generateMainPage(HttpExchange exchange) throws IOException {
         DataBase db = DataBase.getDb();
         final Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
         final StringBuilder responseBody = new StringBuilder();
-        responseBody.append("TOP RATED MOVIES TODAY\n\n");
+        responseBody.append("{");
         for (String name : db.getMovies().keySet()) {
-            responseBody.append(db.getMovieByName(name).getName());
-            responseBody.append("\n");
+            responseBody.append(String.format("{\"movie_name\":\"%s\"},",db.getMovieByName(name).getName()));
         }
+        responseBody.append("}");
         sendResponseBody(exchange, responseBody.toString().getBytes(CHARSET));
     }
 
@@ -77,7 +71,7 @@ public class ProjectHttpHandler implements HttpHandler {
         DataBase db = DataBase.getDb();
         final Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-        sendResponseBody(exchange, ("SCHEDULE\n\n" + db.getSchedule().getSchedule()).getBytes(CHARSET));
+        sendResponseBody(exchange, db.getSchedule().getJsonResponseToString().getBytes(CHARSET));
 
     }
 
@@ -89,4 +83,5 @@ public class ProjectHttpHandler implements HttpHandler {
         out.close();
         System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
     }
+
 }

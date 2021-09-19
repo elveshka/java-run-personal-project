@@ -13,18 +13,20 @@ public class Seats {
             super("Wrong seat name\n");
         }
     }
-    private class SeatNotAvailaable extends RuntimeException {
-        SeatNotAvailaable() {
+    private class SeatNotAvailable extends RuntimeException {
+        SeatNotAvailable() {
             super("Seat is taken\n");
         }
     }
-    private Integer[][] seats = new Integer[10][10];
+    private final Integer[][] seats = new Integer[10][10];
+    private int vacantSeats;
     public Seats() {
         for (Integer[] rows : seats) {
             for (Integer seat : rows) {
                 seat = null;
             }
         }
+        vacantSeats = 100;
     }
     public void chooseSeat(String seatNum) {
         int row, column;
@@ -38,9 +40,10 @@ public class Seats {
             throw new WrongSeatNameException();
         }
         if (seats[row][column - 1] != null) {
-            throw new SeatNotAvailaable();
+            throw new SeatNotAvailable();
         } else {
             seats[row][column - 1] = 1;
+            --vacantSeats;
             //buyingTicket
         }
     }
@@ -65,5 +68,8 @@ public class Seats {
             seatsToStr.append("\n");
         }
         return seatsToStr.toString();
+    }
+    public int getVacantSeats() {
+        return vacantSeats;
     }
 }
