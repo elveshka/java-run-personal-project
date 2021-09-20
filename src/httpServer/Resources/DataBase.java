@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Simulate database queries
+ * Simulating database queries
  */
 
 public class DataBase {
