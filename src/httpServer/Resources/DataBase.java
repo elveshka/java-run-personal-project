@@ -8,9 +8,13 @@ import java.util.Map;
  */
 
 public class DataBase {
-    private Map<String, Movie> movies = new HashMap<>();
-    private static final Schedule schedule = new Schedule();
-    private static DataBase db = null; // Singletone :D
+    private final Map<String, Movie> movies = new HashMap<>();
+    private final Schedule scheduleToday = new Schedule();
+    private static final DataBase db = new DataBase(); // Singletone :D
+
+    private final Hall hallA1 = new Hall("A1");
+    private final Hall hallA2 = new Hall("A2");
+    private final Hall hallB1 = new Hall("B1");
 
     private DataBase() {
         this.movies.put("Titanic", new Movie("Titanic", 1997, "James Cameron"));
@@ -23,9 +27,6 @@ public class DataBase {
     }
 
     public static DataBase getDb() {
-        if (db == null) {
-            db = new DataBase();
-        }
         return db;
     }
 
@@ -34,6 +35,18 @@ public class DataBase {
     }
 
     public Schedule getSchedule() {
-        return schedule;
+        return scheduleToday;
+    }
+
+    public Hall getHallA1() {
+        return hallA1;
+    }
+
+    public Hall getHallA2() {
+        return hallA2;
+    }
+
+    public Hall getHallB1() {
+        return hallB1;
     }
 }

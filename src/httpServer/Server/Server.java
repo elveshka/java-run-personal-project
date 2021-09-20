@@ -1,6 +1,8 @@
 package httpServer.Server;
 
 import com.sun.net.httpserver.HttpServer;
+import httpServer.Resources.Session;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -10,9 +12,11 @@ public class Server {
     private static final String schedulePage = "/schedule";
     private static final String moviesSearchPage = "/movies/search";
 
+
     public static void main(String[] args) {
         HttpServer httpserver;
-        ProjectHttpHandler handler = new ProjectHttpHandler();
+        Session todaySession = new Session("today");
+        ProjectHttpHandler handler = new ProjectHttpHandler(todaySession);
         try {
             httpserver = HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
             httpserver.createContext(mainPage, handler);

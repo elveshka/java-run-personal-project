@@ -4,6 +4,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import httpServer.Resources.DataBase;
+import httpServer.Resources.Session;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,8 +19,11 @@ public class ProjectHttpHandler implements HttpHandler {
     private static final int STATUS_OK = 200;
     private static final int METHOD_NOT_ALLOWED = 405;
     private static final int FORBIDDEN_REQUEST = 403;
-
-    public ProjectHttpHandler() {}
+    private static final int PAGE_NOT_FOUND = 404;
+    private final Session session;
+    public ProjectHttpHandler(Session session) {
+        this.session = session;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -28,21 +32,15 @@ public class ProjectHttpHandler implements HttpHandler {
             generateMainPage(exchange);
         } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/schedule")) {
             generateSchedulePage(exchange);
-        } else if ("GET".equals(exchange.getRequestMethod())) {
-            OutputStream outputstream = exchange.getResponseBody();
-            //TODO JSON response
-            if (exchange.getRequestURI().getQuery() != null) {
-                String response = getQuery(exchange).get("name");
-                exchange.sendResponseHeaders(200, response.length());
-                outputstream.write(response.getBytes());
+        } else if (GET_METHOD.equals(exchange.getRequestMethod())) {
+            if (exchange.getHttpContext().getPath().equals("/movies/search")) {
+                System.out.println(exchange.getRequestURI().getQuery());
+                if (exchange.getRequestURI().getQuery().isEmpty()) {
+                    System.out.println("koshka");
+                }
             } else {
-                exchange.sendResponseHeaders(200, 3);
-                outputstream.write("aaa".getBytes(StandardCharsets.UTF_8));
+                exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
             }
-            outputstream.flush();
-            outputstream.close();
-        } else {
-            exchange.sendResponseHeaders(FORBIDDEN_REQUEST, -1);
         }
     }
 
@@ -75,6 +73,12 @@ public class ProjectHttpHandler implements HttpHandler {
 
     }
 
+    private void generateMovieTitlePage(HttpExchange exchange) throws IOException{
+        DataBase db = DataBase.getDb();
+        final Headers headers = exchange.getResponseHeaders();
+        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+    }
+
     private void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
@@ -85,3 +89,15 @@ public class ProjectHttpHandler implements HttpHandler {
     }
 
 }
+
+//    OutputStream outputstream = exchange.getResponseBody();
+//            if (exchange.getRequestURI().getQuery() != null) {
+//                    String response = getQuery(exchange).get("name");
+//                    exchange.sendResponseHeaders(200, response.length());
+//                    outputstream.write(response.getBytes());
+//                    } else {
+//                    exchange.sendResponseHeaders(200, 3);
+//                    outputstream.write("aaa".getBytes(StandardCharsets.UTF_8));
+//                    }
+//                    outputstream.flush();
+//                    outputstream.close();

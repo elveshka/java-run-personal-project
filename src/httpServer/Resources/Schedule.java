@@ -5,19 +5,13 @@ import java.util.Map;
 
 // WOOOOOOOOO HARCODE COMING ! ! !
 public class Schedule {
-    private static final Map<Integer, Movie> sessions = new HashMap<>();
-    private static final Map<Integer, Seats> seats = new HashMap<>();
+    private static final Map<Integer, Hall> sessions = new HashMap<>();
+    private static final Map<Integer, Movie> movieOnTime = new HashMap<>();
+
     public Schedule() {
-        DataBase db = DataBase.getDb();
         for (int i = 0; i < 24; ++i) {
             sessions.put(i, null);
         }
-        sessions.put(13, db.getMovieByName("Titanic"));
-        sessions.put(17, db.getMovieByName("Austin Powers"));
-        sessions.put(19, db.getMovieByName("Green Elephant"));
-        seats.put(13, new Seats());
-        seats.put(17, new Seats());
-        seats.put(19, new Seats());
     }
 
     public String getSchedule() {
@@ -26,7 +20,7 @@ public class Schedule {
             if (sessions.get(time) != null) {
                 schedule.append(String.format("%d:00 - %s\n",
                         time,
-                        sessions.get(time).getName()));
+                        movieOnTime.get(time).getName()));
             }
         }
         return schedule.toString();
@@ -39,7 +33,7 @@ public class Schedule {
             if (sessions.get(time) != null) {
                 str.append(String.format("{\"session_time\":\"%d:00\",\"movie_name\":\"%s\"},",
                         time,
-                        sessions.get(time).getName()));
+                        movieOnTime.get(time).getName()));
             }
         }
         str.append("}");
@@ -50,9 +44,32 @@ public class Schedule {
         return getSeatsOnTime(time).printSeatsToString();
     }
 
-    public Seats getSeatsOnTime(int time) {
-        return seats.get(time);
+    public Hall getSeatsOnTime(int time) {
+        return sessions.get(time);
     }
 
-    public void setSessions(int time, Movie movie) {}
+    public Integer getMovieSessionTime(String movieName) {
+        for (Integer time : movieOnTime.keySet()) {
+            if (time != null && movieOnTime.get(time).getName().equals(movieName)) {
+                return time;
+            }
+        }
+        return null;
+    }
+    public Hall getHallByMovie(String movieName) {
+        for (Integer time : movieOnTime.keySet()) {
+            if (time != null && movieOnTime.get(time).getName().equals(movieName)) {
+                return sessions.get(time);
+            }
+        }
+        return null;
+    }
+    public void setSession(DataBase db) {
+        sessions.put(13, db.getHallA1());
+        sessions.put(17, db.getHallA2());
+        sessions.put(19, db.getHallB1());
+        movieOnTime.put(13, db.getMovieByName("Titanic"));
+        movieOnTime.put(17, db.getMovieByName("Austin Powers"));
+        movieOnTime.put(19, db.getMovieByName("Green Elephant"));
+    }
 }
