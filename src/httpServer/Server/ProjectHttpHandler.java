@@ -4,6 +4,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import httpServer.Resources.DataBase;
+import httpServer.Resources.Movie;
 import httpServer.Resources.Session;
 
 import java.io.IOException;
@@ -18,38 +19,28 @@ public class ProjectHttpHandler implements HttpHandler {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final int STATUS_OK = 200;
     private static final int METHOD_NOT_ALLOWED = 405;
-    private static final int FORBIDDEN_REQUEST = 403;
     private static final int PAGE_NOT_FOUND = 404;
     private final Session session;
+
     public ProjectHttpHandler(Session session) {
         this.session = session;
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        System.out.println(exchange.getRequestURI().toString());
-        if (exchange.getRequestURI().toString().equals("/")) {
-            generateMainPage(exchange);
-        } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/schedule")) {
-            generateSchedulePage(exchange);
-        } else if (GET_METHOD.equals(exchange.getRequestMethod())) {
-            if (exchange.getHttpContext().getPath().equals("/movies/search")) {
-                System.out.println(exchange.getRequestURI().getQuery());
-                if (exchange.getRequestURI().getQuery().isEmpty()) {
-                    System.out.println("koshka");
-                }
+        if (GET_METHOD.equals(exchange.getRequestMethod())) {
+            if (exchange.getRequestURI().toString().equals("/")) {
+                generateMainPage(exchange);
+            } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/schedule")) {
+                generateSchedulePage(exchange);
+            } else if (exchange.getHttpContext().getPath().equalsIgnoreCase("/movies/search")) {
+                generateMovieTitlePage(exchange);
             } else {
                 exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
             }
+        } else {
+            exchange.sendResponseHeaders(METHOD_NOT_ALLOWED, -1);
         }
-    }
-
-    private Map<String, String> getQuery(HttpExchange exchange) {
-        String query = exchange.getRequestURI().getQuery();
-        String[] arg = query.split("=");
-        Map<String,String> ret = new HashMap<>();
-        ret.put(arg[0], arg[1]);
-        return ret;
     }
 
     private void generateMainPage(HttpExchange exchange) throws IOException {
@@ -66,19 +57,26 @@ public class ProjectHttpHandler implements HttpHandler {
     }
 
     private void generateSchedulePage(HttpExchange exchange) throws IOException {
-        DataBase db = DataBase.getDb();
         final Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-        sendResponseBody(exchange, db.getSchedule().getJsonResponseToString().getBytes(CHARSET));
-
+        sendResponseBody(exchange, session.getSchedule().getJsonResponseToString().getBytes(CHARSET));
     }
 
     private void generateMovieTitlePage(HttpExchange exchange) throws IOException{
         DataBase db = DataBase.getDb();
+        final Movie movie = db.getMovieByName("n");
         final Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+
     }
 
+    private Map<String, String> getQuery(HttpExchange exchange) {
+        String query = exchange.getRequestURI().getQuery();
+        String[] arg = query.split("=");
+        Map<String,String> ret = new HashMap<>();
+        ret.put(arg[0], arg[1]);
+        return ret;
+    }
     private void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
@@ -87,7 +85,6 @@ public class ProjectHttpHandler implements HttpHandler {
         out.close();
         System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
     }
-
 }
 
 //    OutputStream outputstream = exchange.getResponseBody();
