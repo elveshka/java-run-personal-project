@@ -63,20 +63,42 @@ public class ProjectHttpHandler implements HttpHandler {
     }
 
     private void generateMovieTitlePage(HttpExchange exchange) throws IOException{
-        DataBase db = DataBase.getDb();
-        final Movie movie = db.getMovieByName("n");
-        final Headers headers = exchange.getResponseHeaders();
-        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+//        getQuery(exchange.getRequestURI().getQuery()).forEach((k, v) -> {
+//
+//        });   for multiple GET variables
 
+        // temporary solution for one get variable
+        Map.Entry<String, String> name = getQuery(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
+        System.out.println(name.getKey());
+        System.out.println(name.getValue());
+        if (name.getKey().equalsIgnoreCase("name")) {
+            DataBase db = DataBase.getDb();
+            final Movie movie = db.getMovieByName(name.getValue().toLowerCase());
+            if (movie != null) {
+                final Headers headers = exchange.getResponseHeaders();
+                headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+                sendResponseBody(exchange, movie.getTitleToJsonResponseToString().getBytes(CHARSET));
+            }
+        }
+        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
     }
 
-    private Map<String, String> getQuery(HttpExchange exchange) {
-        String query = exchange.getRequestURI().getQuery();
-        String[] arg = query.split("=");
-        Map<String,String> ret = new HashMap<>();
-        ret.put(arg[0], arg[1]);
-        return ret;
+    private Map<String, String> getQuery(String query) {
+        if (query == null || query.isEmpty()) {
+            return null;
+        }
+        final Map<String, String> result = new HashMap<>();
+        for (String param : query.split("&")) {
+            String[] entry = param.split("=");
+            if (entry.length > 1) {
+                result.put(entry[0], entry[1]);
+            } else {
+                result.put(entry[0], "");
+            }
+        }
+        return result;
     }
+    
     private void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
