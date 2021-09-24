@@ -50,7 +50,7 @@ public class Schedule {
 
     public Integer getMovieSessionTime(String movieName) {
         for (Integer time : movieOnTime.keySet()) {
-            if (time != null && movieOnTime.get(time).getName().equals(movieName)) {
+            if (time != null && movieOnTime.get(time).getName().equalsIgnoreCase(movieName)) {
                 return time;
             }
         }

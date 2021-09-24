@@ -1,6 +1,8 @@
 package httpServer.Server;
 
 import com.sun.net.httpserver.HttpServer;
+import httpServer.Resources.DataBase;
+import httpServer.Resources.Movie;
 import httpServer.Resources.Session;
 
 import java.io.IOException;

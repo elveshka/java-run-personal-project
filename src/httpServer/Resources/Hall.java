@@ -28,6 +28,7 @@ public class Hall {
             }
         }
         vacantSeats = 100;
+        this.hallName = hallName;
     }
     public void chooseSeat(String seatNum) {
         int row, column;
