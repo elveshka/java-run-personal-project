@@ -17,13 +17,13 @@ public class DataBase {
     private final Hall hallB1 = new Hall("B1");
 
     private DataBase() {
-        this.movies.put("Titanic", new Movie("Titanic", 1997, "James Cameron"));
-        this.movies.put("Austin Powers", new Movie("Austin Powers", 2002, "Jay Roach"));
-        this.movies.put("Green Elephant", new Movie("Green Elephant", 1999, "Svetlana Baskova"));
+        this.movies.put("titanic", new Movie("Titanic", 1997, "James Cameron"));
+        this.movies.put("austin powers", new Movie("Austin Powers", 2002, "Jay Roach"));
+        this.movies.put("green elephant", new Movie("Green Elephant", 1999, "Svetlana Baskova"));
     }
 
     public Movie getMovieByName(String name) {
-        return db.movies.get(name);
+        return db.movies.get(name.toLowerCase());
     }
 
     public static DataBase getDb() {
