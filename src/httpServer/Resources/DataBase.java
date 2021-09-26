@@ -12,14 +12,15 @@ public class DataBase {
     private final Schedule scheduleToday = new Schedule();
     private static final DataBase db = new DataBase(); // Singletone :D
 
-    private final Hall hallA1 = new Hall("A1");
-    private final Hall hallA2 = new Hall("A2");
-    private final Hall hallB1 = new Hall("B1");
+    private final Map<String, Hall> halls = new HashMap<>();
 
     private DataBase() {
         this.movies.put("titanic", new Movie("Titanic", 1997, "James Cameron"));
         this.movies.put("austin powers", new Movie("Austin Powers", 2002, "Jay Roach"));
         this.movies.put("green elephant", new Movie("Green Elephant", 1999, "Svetlana Baskova"));
+        this.halls.put("A1", new Hall("A1"));
+        this.halls.put("B1", new Hall("B1"));
+        this.halls.put("A2", new Hall("A2"));
     }
 
     public Movie getMovieByName(String name) {
@@ -38,15 +39,7 @@ public class DataBase {
         return scheduleToday;
     }
 
-    public Hall getHallA1() {
-        return hallA1;
-    }
-
-    public Hall getHallA2() {
-        return hallA2;
-    }
-
-    public Hall getHallB1() {
-        return hallB1;
+    public Hall getHallByName(String name) {
+        return db.halls.get(name.toUpperCase());
     }
 }

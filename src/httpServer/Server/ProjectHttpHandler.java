@@ -33,6 +33,8 @@ public class ProjectHttpHandler implements HttpHandler {
                 generateMainPage(exchange);
             } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/schedule")) {
                 generateSchedulePage(exchange);
+            } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/purchase")) {
+                generatePurchasePage(exchange);
             } else if (exchange.getHttpContext().getPath().equalsIgnoreCase("/movies/search")) {
                 generateMovieTitlePage(exchange);
             } else {
@@ -50,7 +52,7 @@ public class ProjectHttpHandler implements HttpHandler {
         final StringBuilder responseBody = new StringBuilder();
         responseBody.append("{");
         for (String name : db.getMovies().keySet()) {
-            responseBody.append(String.format("{\"movie_name\":\"%s\"},",db.getMovieByName(name).getName()));
+            responseBody.append(String.format("{\"movie_name\":\"%s\"},", db.getMovieByName(name).getName()));
         }
         responseBody.append("}");
         sendResponseBody(exchange, responseBody.toString().getBytes(CHARSET));
@@ -62,15 +64,9 @@ public class ProjectHttpHandler implements HttpHandler {
         sendResponseBody(exchange, session.getSchedule().getJsonResponseToString().getBytes(CHARSET));
     }
 
-    private void generateMovieTitlePage(HttpExchange exchange) throws IOException{
-//        getQuery(exchange.getRequestURI().getQuery()).forEach((k, v) -> {
-//
-//        });   for multiple GET variables
-
+    private void generateMovieTitlePage(HttpExchange exchange) throws IOException {
         // temporary solution for one get variable
-        Map.Entry<String, String> name = getQuery(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
-        System.out.println(name.getKey());
-        System.out.println(name.getValue());
+        Map.Entry<String, String> name = getQueryToMap(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
         if (name.getKey().equalsIgnoreCase("name")) {
             DataBase db = DataBase.getDb();
             final Movie movie = db.getMovieByName(name.getValue().toLowerCase());
@@ -83,7 +79,15 @@ public class ProjectHttpHandler implements HttpHandler {
         exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
     }
 
-    private Map<String, String> getQuery(String query) {
+    private void generatePurchasePage(HttpExchange exchange) throws IOException {
+        if (!session.validateGetRequest(getQueryToMap(exchange.getRequestURI().getQuery()))) {
+            exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
+        } else {
+
+        }
+    }
+
+    private Map<String, String> getQueryToMap(String query) {
         if (query == null || query.isEmpty()) {
             return null;
         }
@@ -98,7 +102,7 @@ public class ProjectHttpHandler implements HttpHandler {
         }
         return result;
     }
-    
+
     private void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();

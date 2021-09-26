@@ -4,23 +4,29 @@ public class Hall {
     private enum Rows {
         A(0), B(1), C(2), D(3), E(4), F(5), G(6), H(7), I(8), J(9);
         private final int row;
+
         Rows(int num) {
             this.row = num;
         }
     }
+
     private String hallName;
+
     private class WrongSeatNameException extends RuntimeException {
         WrongSeatNameException() {
             super("Wrong seat name\n");
         }
     }
+
     private class SeatNotAvailable extends RuntimeException {
         SeatNotAvailable() {
             super("Seat is taken\n");
         }
     }
+
     private final Integer[][] seats = new Integer[10][10];
     private int vacantSeats;
+
     public Hall(String hallName) {
         for (Integer[] rows : seats) {
             for (Integer seat : rows) {
@@ -30,6 +36,7 @@ public class Hall {
         vacantSeats = 100;
         this.hallName = hallName;
     }
+
     public void chooseSeat(String seatNum) {
         int row, column;
         try {
@@ -49,6 +56,7 @@ public class Hall {
             //buyingTicket
         }
     }
+
     public String printSeatsToString() {
         StringBuilder seatsToStr = new StringBuilder();
         seatsToStr.append("   ");
@@ -71,9 +79,11 @@ public class Hall {
         }
         return seatsToStr.toString();
     }
+
     public String getHallName() {
         return hallName;
     }
+
     public int getVacantSeats() {
         return vacantSeats;
     }

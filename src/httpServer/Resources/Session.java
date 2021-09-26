@@ -1,5 +1,7 @@
 package httpServer.Resources;
 
+import java.util.Map;
+
 //this class creating schedule for all halls depends on date/time
 //but not now :D
 public class Session {
@@ -18,5 +20,35 @@ public class Session {
     public Schedule getSchedule() {
         return schedule;
     }
-}
 
+    public boolean validateGetRequest(Map<String, String> query) {
+        String hall_name = "";
+        String movie_name = "";
+        String time = "";
+
+        for (String s : query.keySet()) {
+            switch (s) {
+                case "time":
+                    time = query.get(s);
+                    break;
+                case "hall_name":
+                    hall_name = query.get(s);
+                    break;
+                case "movie_name":
+                    movie_name = query.get(s);
+                    break;
+            }
+        }
+
+        if (!time.isEmpty() && !movie_name.isEmpty() && !hall_name.isEmpty()) {
+            if (schedule.getHallByMovie(movie_name).getHallName().equals(hall_name)) {
+                if (schedule.getHallOnTime(Integer.parseInt(time)).getHallName().equals(hall_name)) {
+                    return schedule.getMovieSessionTime(movie_name).toString().equals(time);
+                }
+            }
+        }
+
+        public String generatePurchasePageToJson(Ma)
+        return false;
+    }
+}
