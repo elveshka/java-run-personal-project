@@ -7,7 +7,8 @@ import java.util.Map;
 public class Schedule {
     private static final Map<Integer, Hall> sessions = new HashMap<>();
     private static final Map<Integer, Movie> movieOnTime = new HashMap<>();
-
+    private static final Map<Hall, Map<Integer, Movie> > megaMap = new HashMap<>();
+    //TODO think over better the logic of map in map
     public Schedule() {
         for (int i = 0; i < 24; ++i) {
             sessions.put(i, null);

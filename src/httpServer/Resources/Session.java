@@ -34,13 +34,13 @@ public class Session {
                 case "hall_name":
                     hall_name = query.get(s);
                     break;
-                case "movie_name":
-                    movie_name = query.get(s);
-                    break;
+//                case "movie_name":
+//                    movie_name = query.get(s);
+//                    break;
             }
         }
 
-        if (!time.isEmpty() && !movie_name.isEmpty() && !hall_name.isEmpty()) {
+        if (!time.isEmpty()  && !hall_name.isEmpty()) {
             if (schedule.getHallByMovie(movie_name).getHallName().equals(hall_name)) {
                 if (schedule.getHallOnTime(Integer.parseInt(time)).getHallName().equals(hall_name)) {
                     return schedule.getMovieSessionTime(movie_name).toString().equals(time);
