@@ -23,7 +23,6 @@ public class Session {
 
     public boolean validateGetRequest(Map<String, String> query) {
         String hall_name = "";
-        String movie_name = "";
         String time = "";
 
         for (String s : query.keySet()) {
