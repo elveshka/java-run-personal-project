@@ -15,3 +15,13 @@
 - http://localhost:8080/tickets?hall=b1&time=17
 
 **purchase ticket requests**
+
+*for session*\
+http://localhost:8080/tickets?hall=a1&time=21
+
+*use*
+```
+curl http://localhost:8080/purchase -X POST -d "hall=a1&time=21&seat=b4"
+```
+
+*where you choose last param "seat"*
