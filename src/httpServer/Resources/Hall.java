@@ -2,7 +2,8 @@ package httpServer.Resources;
 
 public class Hall {
     private enum Rows {
-        A(0), B(1), C(2), D(3), E(4), F(5), G(6), H(7), I(8), J(9);
+        A(0), B(1), C(2), D(3), E(4),
+        F(5), G(6), H(7), I(8), J(9);
         private final int row;
 
         Rows(int num) {
@@ -10,22 +11,22 @@ public class Hall {
         }
     }
 
-    private String hallName;
-
-    private class WrongSeatNameException extends RuntimeException {
+    private static class WrongSeatNameException extends RuntimeException {
         WrongSeatNameException() {
             super("Wrong seat name\n");
         }
     }
 
-    private class SeatNotAvailable extends RuntimeException {
+    private static class SeatNotAvailable extends RuntimeException {
         SeatNotAvailable() {
             super("Seat is taken\n");
         }
     }
 
+    private final String hallName;
     private final Integer[][] seats = new Integer[10][10];
     private int vacantSeats;
+    private Schedule schedule = new Schedule();
 
     public Hall(String hallName) {
         for (Integer[] rows : seats) {
@@ -88,8 +89,11 @@ public class Hall {
         return vacantSeats;
     }
 
-    //this method must clean all bought seats after session
-    public void vacateTheHall() {
+    public Schedule getSchedule() {
+        return schedule;
+    }
 
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 }

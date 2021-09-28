@@ -36,26 +36,13 @@ public class Movie {
     }
 
     public String getTitleToJsonResponseToString() {
-        DataBase db = DataBase.getDb();
-        String str = "{" +
-                "\"" + "movie_name" + "\"" +
-                ":" +
-                "\"" + getName() + "\"" + "," +
-                "\"" + "year" + "\"" +
-                ":" +
-                "\"" + getYear() + "\"" + "," +
-                "\"" + "director" + "\"" +
-                ":" +
-                "\"" + getDirector() + "\"" + "," +
-                "\"" + "session_time" + "\"" +
-                ":" +
-                "\"" + db.getSchedule().getMovieSessionTime(this.name) + "\"" + "," +
-                "\"" + "hall_name" + "\"" +
-                ":" +
-                "\"" + db.getSchedule().getHallByMovie(this.name).getHallName() + "\"" + "," +
-                "\"" + "available_tickets" + "\"" +
-                ":" +
-                "\"" + db.getSchedule().getHallByMovie(this.name).getVacantSeats() + "\"" + "," +
+        String str = "{\n" +
+                "\"movie_name\": \"" +
+                getName() + "\",\n" +
+                "\"year\": \"" +
+                getYear() + "\",\n" +
+                "\"director\": \"" +
+                getDirector() + "\",\n" +
                 "}";
         return str;
     }

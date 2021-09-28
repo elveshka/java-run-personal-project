@@ -15,8 +15,8 @@ public class DataBase {
     private final Map<String, Hall> halls = new HashMap<>();
 
     private DataBase() {
-        this.movies.put("titanic", new Movie("Titanic", 1997, "James Cameron"));
-        this.movies.put("austin powers", new Movie("Austin Powers", 2002, "Jay Roach"));
+        this.movies.put("titanic",        new Movie("Titanic", 1997, "James Cameron"));
+        this.movies.put("austin powers",  new Movie("Austin Powers", 2002, "Jay Roach"));
         this.movies.put("green elephant", new Movie("Green Elephant", 1999, "Svetlana Baskova"));
         this.halls.put("A1", new Hall("A1"));
         this.halls.put("B1", new Hall("B1"));

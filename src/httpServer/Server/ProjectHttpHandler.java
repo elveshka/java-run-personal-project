@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import httpServer.Resources.DataBase;
 import httpServer.Resources.Movie;
-import httpServer.Resources.Session;
+import httpServer.Resources.DayProgramming;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,10 +20,10 @@ public class ProjectHttpHandler implements HttpHandler {
     private static final int STATUS_OK = 200;
     private static final int METHOD_NOT_ALLOWED = 405;
     private static final int PAGE_NOT_FOUND = 404;
-    private final Session session;
+    private final DayProgramming dayProgramming;
 
-    public ProjectHttpHandler(Session session) {
-        this.session = session;
+    public ProjectHttpHandler(DayProgramming dayProgramming) {
+        this.dayProgramming = dayProgramming;
     }
 
     @Override
@@ -32,9 +32,9 @@ public class ProjectHttpHandler implements HttpHandler {
             if (exchange.getRequestURI().toString().equals("/")) {
                 generateMainPage(exchange);
             } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/schedule")) {
-                generateSchedulePage(exchange);
+//                generateSchedulePage(exchange);
             } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/purchase")) {
-                generatePurchasePage(exchange);
+//                generatePurchasePage(exchange);
             } else if (exchange.getHttpContext().getPath().equalsIgnoreCase("/movies/search")) {
                 generateMovieTitlePage(exchange);
             } else {
@@ -46,30 +46,22 @@ public class ProjectHttpHandler implements HttpHandler {
     }
 
     private void generateMainPage(HttpExchange exchange) throws IOException {
-        DataBase db = DataBase.getDb();
         final Headers headers = exchange.getResponseHeaders();
         headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-        final StringBuilder responseBody = new StringBuilder();
-        responseBody.append("{");
-        for (String name : db.getMovies().keySet()) {
-            responseBody.append(String.format("{\"movie_name\":\"%s\"},", db.getMovieByName(name).getName()));
-        }
-        responseBody.append("}");
-        sendResponseBody(exchange, responseBody.toString().getBytes(CHARSET));
+        sendResponseBody(exchange, dayProgramming.getTopMoviesToJsonString().getBytes(CHARSET));
     }
 
-    private void generateSchedulePage(HttpExchange exchange) throws IOException {
-        final Headers headers = exchange.getResponseHeaders();
-        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-        sendResponseBody(exchange, session.getSchedule().getJsonResponseToString().getBytes(CHARSET));
-    }
+//    private void generateSchedulePage(HttpExchange exchange) throws IOException {
+//        final Headers headers = exchange.getResponseHeaders();
+//        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
+//        sendResponseBody(exchange, dayProgramming.getSchedule().getJsonResponseToString().getBytes(CHARSET));
+//    }
 
     private void generateMovieTitlePage(HttpExchange exchange) throws IOException {
         // temporary solution for one get variable
         Map.Entry<String, String> name = getQueryToMap(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
         if (name.getKey().equalsIgnoreCase("name")) {
-            DataBase db = DataBase.getDb();
-            final Movie movie = db.getMovieByName(name.getValue().toLowerCase());
+            final Movie movie = dayProgramming.getMovieByName(name.getValue().toLowerCase());
             if (movie != null) {
                 final Headers headers = exchange.getResponseHeaders();
                 headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
@@ -79,13 +71,13 @@ public class ProjectHttpHandler implements HttpHandler {
         exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
     }
 
-    private void generatePurchasePage(HttpExchange exchange) throws IOException {
-        if (!session.validateGetRequest(getQueryToMap(exchange.getRequestURI().getQuery()))) {
-            exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
-        } else {
-
-        }
-    }
+//    private void generatePurchasePage(HttpExchange exchange) throws IOException {
+//        if (!dayProgramming.validateGetRequest(getQueryToMap(exchange.getRequestURI().getQuery()))) {
+//            exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
+//        } else {
+//
+//        }
+//    }
 
     private Map<String, String> getQueryToMap(String query) {
         if (query == null || query.isEmpty()) {
