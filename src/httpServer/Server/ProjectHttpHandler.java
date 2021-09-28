@@ -87,7 +87,7 @@ public class ProjectHttpHandler implements HttpHandler {
             try {
                 int time = Integer.parseInt(post.get("time"));
                 dayProgramming.getHallByName(post.get("hall")).getSchedule().getTickets().get(time).chooseSeat(post.get("seat"));
-                sendResponseBody(exchange, "{\"success\": true}".getBytes(CHARSET));
+                sendResponseBody(exchange, "{\"success\": true}\n".getBytes(CHARSET));
             } catch (RuntimeException e) {
                 sendResponseBody(exchange, e.getMessage().getBytes(CHARSET));
             }
