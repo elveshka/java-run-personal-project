@@ -12,7 +12,7 @@ public class DayProgramming {
     public DayProgramming(String date, Set<Hall> halls) {
         this.date = date;
         this.halls.addAll(halls);
-        for (Hall hall : halls) {
+        for (Hall hall : this.halls) {
             for (Integer time : hall.getSchedule().getSessions().keySet()) {
                 if (hall.getSchedule().getSessions().get(time) != null) {
                     topMovies.add(hall.getSchedule().getSessions().get(time));
@@ -57,7 +57,33 @@ public class DayProgramming {
     }
 
     public String getMovieTitleToJsonString(Movie movie) {
-        
+        StringBuilder response = new StringBuilder();
+        response.append(movie.getTitleToJsonString());
+        response.append("{\n");
+        for (Hall hall : halls) {
+            for (int time : hall.getSchedule().getSessions().keySet()){
+                if (hall.getSchedule().getSessions().get(time) != null) {
+                    if (hall.getSchedule().getSessions().get(time).getName().equals(movie.getName())) {
+                        response.append("\t\"hall_name\": \"")
+                                .append(hall.getHallName()).append("\",")
+                                .append("\"time\": \"")
+                                .append(time).append(":00\"\n");
+                    }
+                }
+            }
+        response.append("},\n");
+        }
+        return response.toString();
+    }
+
+    public void tttt() {
+        for (Hall hall : halls) {
+            for (int time : hall.getSchedule().getSessions().keySet()) {
+                if (hall.getSchedule().getSessions().get(time) != null) {
+                    System.out.println(time + " - " + hall.getSchedule().getSessions().get(time).getName());
+                }
+            }
+        }
     }
     //    public boolean validateGetRequest(Map<String, String> query) {
 //        String hall_name = "";

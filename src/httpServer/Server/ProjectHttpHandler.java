@@ -3,7 +3,6 @@ package httpServer.Server;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import httpServer.Resources.DataBase;
 import httpServer.Resources.Movie;
 import httpServer.Resources.DayProgramming;
 
@@ -65,7 +64,7 @@ public class ProjectHttpHandler implements HttpHandler {
             if (movie != null) {
                 final Headers headers = exchange.getResponseHeaders();
                 headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-                sendResponseBody(exchange, movie.getTitleToJsonResponseToString().getBytes(CHARSET));
+                sendResponseBody(exchange, dayProgramming.getMovieTitleToJsonString(movie).getBytes(CHARSET));
             }
         }
         exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
@@ -99,7 +98,6 @@ public class ProjectHttpHandler implements HttpHandler {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
         out.write(rawResponse);
-        out.flush();
         out.close();
         System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
     }

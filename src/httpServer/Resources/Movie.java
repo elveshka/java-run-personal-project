@@ -35,15 +35,15 @@ public class Movie {
         this.director = director;
     }
 
-    public String getTitleToJsonResponseToString() {
+    public String getTitleToJsonString() {
         String str = "{\n" +
-                "\"movie_name\": \"" +
+                "\t\"movie_name\": \"" +
                 getName() + "\",\n" +
-                "\"year\": \"" +
+                "\t\"year\": \"" +
                 getYear() + "\",\n" +
-                "\"director\": \"" +
+                "\t\"director\": \"" +
                 getDirector() + "\",\n" +
-                "}";
+                "},\n";
         return str;
     }
 }

@@ -26,7 +26,7 @@ public class Hall {
     private final String hallName;
     private final Integer[][] seats = new Integer[10][10];
     private int vacantSeats;
-    private Schedule schedule = new Schedule();
+    private Schedule schedule;
 
     public Hall(String hallName) {
         for (Integer[] rows : seats) {
