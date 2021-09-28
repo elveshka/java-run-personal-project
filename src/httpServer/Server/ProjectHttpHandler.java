@@ -40,8 +40,7 @@ public class ProjectHttpHandler implements HttpHandler {
             }
         } else if (POST_METHOD.equals(exchange.getRequestMethod())) {
             if (exchange.getRequestURI().toString().equals("/purchase")) {
-                byte[] sobaka = exchange.getRequestBody().readAllBytes();
-                System.out.println(new String(sobaka));
+                validatePurchase(exchange);
             }
         } else {
             exchange.sendResponseHeaders(METHOD_NOT_ALLOWED, -1);
@@ -70,16 +69,30 @@ public class ProjectHttpHandler implements HttpHandler {
 
     private void generateTicketsPage(HttpExchange exchange) throws IOException {
         Map<String, String> query = getParamsToMap(exchange.getRequestURI().getQuery());
-        if (query.containsKey("hall") && query.containsKey("time") && query.size() == 2) {
-            if (dayProgramming.validateTicketsGetRequest(query)) {
+        if (query.size() == 2 && query.containsKey("hall") && query.containsKey("time")) {
+            String response = dayProgramming.getTicketsToJson(query);
+            if (response != null) {
                 final Headers headers = exchange.getResponseHeaders();
                 headers.set("Content-Type", String.format("application/json; charset=%s", CHARSET));
-                sendResponseBody(exchange, dayProgramming.getTicketsToJson(query).getBytes(CHARSET));
+                sendResponseBody(exchange, response.getBytes(CHARSET));
             }
         }
         exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
     }
 
+    private void validatePurchase(HttpExchange exchange) throws IOException {
+        Map<String, String> post = getParamsToMap(new String(exchange.getRequestBody().readAllBytes()));
+        if (post.size() == 3 && post.containsKey("seat") &&
+                post.containsKey("hall") && post.containsKey("time")) {
+            try {
+                int time = Integer.parseInt(post.get("time"));
+                dayProgramming.getHallByName(post.get("hall")).getSchedule().getTickets().get(time).chooseSeat(post.get("seat"));
+                sendResponseBody(exchange, "{\"success\": true}".getBytes(CHARSET));
+            } catch (RuntimeException e) {
+                sendResponseBody(exchange, e.getMessage().getBytes(CHARSET));
+            }
+        }
+    }
 //    private void generateSchedulePage(HttpExchange exchange) throws IOException {
 //        final Headers headers = exchange.getResponseHeaders();
 //        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
@@ -93,12 +106,12 @@ public class ProjectHttpHandler implements HttpHandler {
 //        }
 //    }
 
-    private Map<String, String> getParamsToMap(String query) {
-        if (query == null || query.isEmpty()) {
+    private Map<String, String> getParamsToMap(String params) {
+        if (params == null || params.isEmpty()) {
             return null;
         }
         final Map<String, String> result = new HashMap<>();
-        for (String param : query.split("&")) {
+        for (String param : params.split("&")) {
             String[] entry = param.split("=");
             if (entry.length > 1) {
                 result.put(entry[0], entry[1]);

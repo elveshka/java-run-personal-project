@@ -44,6 +44,15 @@ public class DayProgramming {
         return null;
     }
 
+    public Hall getHallByName(String name) {
+        for (Hall hall : halls) {
+            if (hall.getHallName().equalsIgnoreCase(name)) {
+                return hall;
+            }
+        }
+        return null;
+    }
+
     public String getTopMoviesToJson() {
         StringBuilder response = new StringBuilder();
 
@@ -78,29 +87,20 @@ public class DayProgramming {
         return response.toString();
     }
 
-    public boolean validateTicketsGetRequest(Map<String, String> query) {
-        for (Hall hall : halls) {
-            if (hall.getHallName().equalsIgnoreCase(query.get("hall"))) {
-                int time = Integer.parseInt(query.get("time"));
-                if (hall.getSchedule().getSessions().get(time) != null) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public String getTicketsToJson(Map<String, String> query) {
         int time = Integer.parseInt(query.get("time"));
         for (Hall hall : halls) {
             if (hall.getHallName().equalsIgnoreCase(query.get("hall"))) {
-                return "{\"available_tickets\": \"" +
-                        hall.getSchedule().getTickets().get(time).getTickets() + "\"},\n" +
-                        hall.getSchedule().getTickets().get(time).printSeatsToString();
+                if (hall.getSchedule().getSessions().get(time) != null) {
+                    return "{\"available_tickets\": \"" +
+                            hall.getSchedule().getTickets().get(time).getTickets() + "\"},\n" +
+                            hall.getSchedule().getTickets().get(time).printSeatsToString();
+                }
             }
         }
         return null;
     }
+
     //    public boolean validateGetRequest(Map<String, String> query) {
 //        String hall_name = "";
 //        String movie_name = "";
