@@ -55,6 +55,10 @@ public class DayProgramming {
         response.append("}");
         return response.toString();
     }
+
+    public String getMovieTitleToJsonString(Movie movie) {
+        
+    }
     //    public boolean validateGetRequest(Map<String, String> query) {
 //        String hall_name = "";
 //        String movie_name = "";
