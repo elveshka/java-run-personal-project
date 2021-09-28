@@ -1,13 +1,14 @@
 package httpServer.Resources;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class DayProgramming {
     private final String date; // should be Date type
     private final Schedule schedule = new Schedule();
     private final Set<Hall> halls = new HashSet<>();
-    private Set<Movie> topMovies = new HashSet<>();
+    private final Set<Movie> topMovies = new HashSet<>();
 
     public DayProgramming(String date, Set<Hall> halls) {
         this.date = date;
@@ -34,17 +35,16 @@ public class DayProgramming {
     }
 
     public Movie getMovieByName(String name) {
-        Movie movie;
-        while (topMovies.iterator().hasNext()) {
-            movie = topMovies.iterator().next();
-            if (name.equalsIgnoreCase(movie.getName())) {
-                return movie;
+        for (Movie topMovie : topMovies) {
+            System.out.println(topMovie.getName());
+            if (name.equalsIgnoreCase(topMovie.getName())) {
+                return topMovie;
             }
         }
         return null;
     }
 
-    public String getTopMoviesToJsonString() {
+    public String getTopMoviesToJson() {
         StringBuilder response = new StringBuilder();
 
         response.append("{\n");
@@ -56,14 +56,16 @@ public class DayProgramming {
         return response.toString();
     }
 
-    public String getMovieTitleToJsonString(Movie movie) {
+    public String getMovieTitleToJson(Movie movie) {
         StringBuilder response = new StringBuilder();
+        Map<Integer, Movie> ses;
         response.append(movie.getTitleToJsonString());
         response.append("{\n");
         for (Hall hall : halls) {
-            for (int time : hall.getSchedule().getSessions().keySet()){
-                if (hall.getSchedule().getSessions().get(time) != null) {
-                    if (hall.getSchedule().getSessions().get(time).getName().equals(movie.getName())) {
+            ses = hall.getSchedule().getSessions();
+            for (int time : ses.keySet()) {
+                if (ses.get(time) != null) {
+                    if (ses.get(time).getName().equals(movie.getName())) {
                         response.append("\t\"hall_name\": \"")
                                 .append(hall.getHallName()).append("\",")
                                 .append("\"time\": \"")
@@ -71,19 +73,33 @@ public class DayProgramming {
                     }
                 }
             }
-        response.append("},\n");
+            response.append("},\n");
         }
         return response.toString();
     }
 
-    public void tttt() {
+    public boolean validateTicketsGetRequest(Map<String, String> query) {
         for (Hall hall : halls) {
-            for (int time : hall.getSchedule().getSessions().keySet()) {
+            if (hall.getHallName().equalsIgnoreCase(query.get("hall"))) {
+                int time = Integer.parseInt(query.get("time"));
                 if (hall.getSchedule().getSessions().get(time) != null) {
-                    System.out.println(time + " - " + hall.getSchedule().getSessions().get(time).getName());
+                    return true;
                 }
             }
         }
+        return false;
+    }
+
+    public String getTicketsToJson(Map<String, String> query) {
+        int time = Integer.parseInt(query.get("time"));
+        for (Hall hall : halls) {
+            if (hall.getHallName().equalsIgnoreCase(query.get("hall"))) {
+                return "{\"available_tickets\": \"" +
+                        hall.getSchedule().getTickets().get(time).getTickets() + "\"},\n" +
+                        hall.getSchedule().getTickets().get(time).printSeatsToString();
+            }
+        }
+        return null;
     }
     //    public boolean validateGetRequest(Map<String, String> query) {
 //        String hall_name = "";

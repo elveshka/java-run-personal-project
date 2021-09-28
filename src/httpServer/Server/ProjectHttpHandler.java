@@ -3,8 +3,8 @@ package httpServer.Server;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import httpServer.Resources.Movie;
 import httpServer.Resources.DayProgramming;
+import httpServer.Resources.Movie;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class ProjectHttpHandler implements HttpHandler {
     private static final String GET_METHOD = "GET";
+    private static final String POST_METHOD = "POST";
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final int STATUS_OK = 200;
     private static final int METHOD_NOT_ALLOWED = 405;
@@ -30,14 +31,17 @@ public class ProjectHttpHandler implements HttpHandler {
         if (GET_METHOD.equals(exchange.getRequestMethod())) {
             if (exchange.getRequestURI().toString().equals("/")) {
                 generateMainPage(exchange);
-            } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/schedule")) {
-//                generateSchedulePage(exchange);
-            } else if (exchange.getRequestURI().toString().equalsIgnoreCase("/purchase")) {
-//                generatePurchasePage(exchange);
+            } else if (exchange.getHttpContext().getPath().equalsIgnoreCase("/tickets")) {
+                generateTicketsPage(exchange);
             } else if (exchange.getHttpContext().getPath().equalsIgnoreCase("/movies/search")) {
                 generateMovieTitlePage(exchange);
             } else {
                 exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
+            }
+        } else if (POST_METHOD.equals(exchange.getRequestMethod())) {
+            if (exchange.getRequestURI().toString().equals("/purchase")) {
+                byte[] sobaka = exchange.getRequestBody().readAllBytes();
+                System.out.println(new String(sobaka));
             }
         } else {
             exchange.sendResponseHeaders(METHOD_NOT_ALLOWED, -1);
@@ -46,8 +50,34 @@ public class ProjectHttpHandler implements HttpHandler {
 
     private void generateMainPage(HttpExchange exchange) throws IOException {
         final Headers headers = exchange.getResponseHeaders();
-        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-        sendResponseBody(exchange, dayProgramming.getTopMoviesToJsonString().getBytes(CHARSET));
+        headers.set("Content-Type", String.format("application/json; charset=%s", CHARSET));
+        sendResponseBody(exchange, dayProgramming.getTopMoviesToJson().getBytes(CHARSET));
+    }
+
+    private void generateMovieTitlePage(HttpExchange exchange) throws IOException {
+        // temporary solution for one get variable
+        Map.Entry<String, String> name = getParamsToMap(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
+        if (name.getKey().equalsIgnoreCase("name")) {
+            final Movie movie = dayProgramming.getMovieByName(name.getValue().toLowerCase());
+            if (movie != null) {
+                final Headers headers = exchange.getResponseHeaders();
+                headers.set("Content-Type", String.format("application/json; charset=%s", CHARSET));
+                sendResponseBody(exchange, dayProgramming.getMovieTitleToJson(movie).getBytes(CHARSET));
+            }
+        }
+        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
+    }
+
+    private void generateTicketsPage(HttpExchange exchange) throws IOException {
+        Map<String, String> query = getParamsToMap(exchange.getRequestURI().getQuery());
+        if (query.containsKey("hall") && query.containsKey("time") && query.size() == 2) {
+            if (dayProgramming.validateTicketsGetRequest(query)) {
+                final Headers headers = exchange.getResponseHeaders();
+                headers.set("Content-Type", String.format("application/json; charset=%s", CHARSET));
+                sendResponseBody(exchange, dayProgramming.getTicketsToJson(query).getBytes(CHARSET));
+            }
+        }
+        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
     }
 
 //    private void generateSchedulePage(HttpExchange exchange) throws IOException {
@@ -55,21 +85,6 @@ public class ProjectHttpHandler implements HttpHandler {
 //        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
 //        sendResponseBody(exchange, dayProgramming.getSchedule().getJsonResponseToString().getBytes(CHARSET));
 //    }
-
-    private void generateMovieTitlePage(HttpExchange exchange) throws IOException {
-        // temporary solution for one get variable
-        Map.Entry<String, String> name = getQueryToMap(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
-        if (name.getKey().equalsIgnoreCase("name")) {
-            final Movie movie = dayProgramming.getMovieByName(name.getValue().toLowerCase());
-            if (movie != null) {
-                final Headers headers = exchange.getResponseHeaders();
-                headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-                sendResponseBody(exchange, dayProgramming.getMovieTitleToJsonString(movie).getBytes(CHARSET));
-            }
-        }
-        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
-    }
-
 //    private void generatePurchasePage(HttpExchange exchange) throws IOException {
 //        if (!dayProgramming.validateGetRequest(getQueryToMap(exchange.getRequestURI().getQuery()))) {
 //            exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
@@ -78,7 +93,7 @@ public class ProjectHttpHandler implements HttpHandler {
 //        }
 //    }
 
-    private Map<String, String> getQueryToMap(String query) {
+    private Map<String, String> getParamsToMap(String query) {
         if (query == null || query.isEmpty()) {
             return null;
         }
@@ -98,7 +113,7 @@ public class ProjectHttpHandler implements HttpHandler {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
         out.write(rawResponse);
-        out.close();
+        out.flush();
         System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
     }
 }

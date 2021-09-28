@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class Schedule {
     private final Map<Integer, Movie> sessions = new HashMap<>();
+    private final Map<Integer, SessionTickets> tickets = new HashMap<>();
 
     public Schedule() {
         for (int i = 0; i < 24; ++i) {
@@ -12,9 +13,12 @@ public class Schedule {
         }
     }
 
-    public void addSession(int time, Movie movie) {
+    public void addSession(int time, Movie movie, int size) {
         if (time >= 0 && time <= 23) {
-            sessions.putIfAbsent(time, movie);
+            if (sessions.get(time) == null) {
+                sessions.put(time, movie);
+                tickets.put(time, new SessionTickets(size));
+            }
         }
     }
 
@@ -22,6 +26,9 @@ public class Schedule {
         return sessions;
     }
 
+    public Map<Integer, SessionTickets> getTickets() {
+        return tickets;
+    }
 //    public String getSchedule() {
 //        StringBuilder schedule = new StringBuilder();
 //        for (int time : sessions.keySet()) {
