@@ -10,17 +10,19 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class Server {
-
     private static final String mainPage = "/";
     private static final String moviesSearchPage = "/movies/search";
     private static final String ticketsPage = "/tickets";
     private static final String purchasePage = "/purchase";
 
+    public static final Logger logger = Logger.getLogger(
+            Server.class.getName());
+
     public static void main(String[] args) throws IOException {
         HttpServer httpserver = HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
-
         DayProgramming todayDayProgramming = new DayProgramming(hardcodeBlock());
 
         MainPageHandler mainPageHandler = new MainPageHandler(todayDayProgramming);
@@ -33,6 +35,9 @@ public class Server {
         httpserver.createContext(purchasePage, purchasePageHandler);
         httpserver.createContext(ticketsPage, ticketsPageHandler);
         httpserver.start();
+
+        logger.info(String.format("Server start\n%s",
+                System.getProperty("file.encoding")));
     }
 
     private static Set<Hall> hardcodeBlock() {

@@ -21,7 +21,6 @@ public class DayProgramming {
 
     public Movie getMovieByName(String name) {
         for (Movie topMovie : topMovies) {
-            System.out.println(topMovie.getName());
             if (name.equalsIgnoreCase(topMovie.getName())) {
                 return topMovie;
             }
