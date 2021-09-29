@@ -1,10 +1,10 @@
 package httpServer.Server;
 
 import com.sun.net.httpserver.HttpServer;
+import httpServer.Resources.DayProgramming;
 import httpServer.Resources.Hall;
 import httpServer.Resources.Movie;
 import httpServer.Resources.Schedule;
-import httpServer.Resources.DayProgramming;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,7 +21,7 @@ public class Server {
     public static void main(String[] args) {
         HttpServer httpserver;
         System.out.println(System.getProperty("file.encoding"));
-        DayProgramming todayDayProgramming = new DayProgramming("today", hardcodeBlock());
+        DayProgramming todayDayProgramming = new DayProgramming(hardcodeBlock());
         ProjectHttpHandler handler = new ProjectHttpHandler(todayDayProgramming);
         try {
             httpserver = HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
@@ -39,10 +39,8 @@ public class Server {
         Set<Hall> halls = new HashSet<>();
         Hall a1 = new Hall("A1", 10);
         Hall b1 = new Hall("B1", 7);
-//        Hall a2 = new Hall("A2", 8);
         Schedule schedule1 = new Schedule();
         Schedule schedule2 = new Schedule();
-//        Schedule schedule3 = new Schedule();
         Movie titanic = new Movie("Titanic", 1997, "James Cameron");
         Movie austin = new Movie("Austin Powers", 2002, "Jay Roach");
         Movie green = new Movie("Green Elephant", 1999, "Svetlana Baskova");
@@ -54,20 +52,11 @@ public class Server {
         schedule2.addSession(17, austin, b1.getHallSize());
         schedule2.addSession(19, titanic, b1.getHallSize());
 
-//        schedule3.addSession(8, green, a2.getHallSize());
-//        schedule3.addSession(11, green, a2.getHallSize());
-//        schedule3.addSession(14, green, a2.getHallSize());
-//        schedule3.addSession(17, green, a2.getHallSize());
-//        schedule3.addSession(20, green, a2.getHallSize());
-//        schedule3.addSession(23, green, a2.getHallSize());
-
         a1.setSchedule(schedule1);
         b1.setSchedule(schedule2);
-//        a2.setSchedule(schedule3);
 
         halls.add(a1);
         halls.add(b1);
-//        halls.add(a2);
 
         return halls;
     }

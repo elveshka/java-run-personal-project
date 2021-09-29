@@ -54,7 +54,6 @@ public class ProjectHttpHandler implements HttpHandler {
     }
 
     private void generateMovieTitlePage(HttpExchange exchange) throws IOException {
-        // temporary solution for one get variable
         Map.Entry<String, String> name = getParamsToMap(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
         if (name.getKey().equalsIgnoreCase("name")) {
             final Movie movie = dayProgramming.getMovieByName(name.getValue().toLowerCase());
@@ -92,19 +91,8 @@ public class ProjectHttpHandler implements HttpHandler {
                 sendResponseBody(exchange, e.getMessage().getBytes(CHARSET));
             }
         }
+        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
     }
-//    private void generateSchedulePage(HttpExchange exchange) throws IOException {
-//        final Headers headers = exchange.getResponseHeaders();
-//        headers.set("Content-Type", String.format("application/json,; charset=%s", CHARSET));
-//        sendResponseBody(exchange, dayProgramming.getSchedule().getJsonResponseToString().getBytes(CHARSET));
-//    }
-//    private void generatePurchasePage(HttpExchange exchange) throws IOException {
-//        if (!dayProgramming.validateGetRequest(getQueryToMap(exchange.getRequestURI().getQuery()))) {
-//            exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
-//        } else {
-//
-//        }
-//    }
 
     private Map<String, String> getParamsToMap(String params) {
         if (params == null || params.isEmpty()) {
@@ -130,15 +118,3 @@ public class ProjectHttpHandler implements HttpHandler {
         System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
     }
 }
-
-//    OutputStream outputstream = exchange.getResponseBody();
-//            if (exchange.getRequestURI().getQuery() != null) {
-//                    String response = getQuery(exchange).get("name");
-//                    exchange.sendResponseHeaders(200, response.length());
-//                    outputstream.write(response.getBytes());
-//                    } else {
-//                    exchange.sendResponseHeaders(200, 3);
-//                    outputstream.write("aaa".getBytes(StandardCharsets.UTF_8));
-//                    }
-//                    outputstream.flush();
-//                    outputstream.close();

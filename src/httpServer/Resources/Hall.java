@@ -3,9 +3,7 @@ package httpServer.Resources;
 public class Hall {
 
     private final String hallName;
-
     private final int hallSize;
-
     private Schedule schedule = new Schedule();
 
     public Hall(String hallName, int size) {
@@ -21,11 +19,11 @@ public class Hall {
         return schedule;
     }
 
-    public int getHallSize() {
-        return hallSize;
-    }
-
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
+    }
+
+    public int getHallSize() {
+        return hallSize;
     }
 }

@@ -1,9 +1,9 @@
 package httpServer.Resources;
 
 public class Movie {
-    private String name;
-    private int year;
-    private String director;
+    private final String name;
+    private final int year;
+    private final String director;
 
     public Movie(String name, int year, String director) {
         this.name = name;
@@ -21,18 +21,6 @@ public class Movie {
 
     public String getDirector() {
         return director;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
     }
 
     public String getTitleToJsonString() {
