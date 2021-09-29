@@ -1,10 +1,7 @@
 package httpServer.Server;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import httpServer.Resources.DayProgramming;
-import httpServer.Resources.Movie;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,88 +10,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProjectHttpHandler implements HttpHandler {
-    private static final String GET_METHOD = "GET";
-    private static final String POST_METHOD = "POST";
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
-    private static final int STATUS_OK = 200;
-    private static final int METHOD_NOT_ALLOWED = 405;
-    private static final int PAGE_NOT_FOUND = 404;
-    private final DayProgramming dayProgramming;
+public abstract class ProjectHttpHandler implements HttpHandler {
+    protected static final String GET_METHOD = "GET";
+    protected static final String POST_METHOD = "POST";
+    protected static final Charset UTF_8 = StandardCharsets.UTF_8;
+    protected static final int STATUS_OK = 200;
+    protected static final int METHOD_NOT_ALLOWED = 405;
+    protected static final int PAGE_NOT_FOUND = 404;
 
-    public ProjectHttpHandler(DayProgramming dayProgramming) {
-        this.dayProgramming = dayProgramming;
-    }
-
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        if (GET_METHOD.equals(exchange.getRequestMethod())) {
-            if (exchange.getRequestURI().toString().equals("/")) {
-                generateMainPage(exchange);
-            } else if (exchange.getHttpContext().getPath().equalsIgnoreCase("/tickets")) {
-                generateTicketsPage(exchange);
-            } else if (exchange.getHttpContext().getPath().equalsIgnoreCase("/movies/search")) {
-                generateMovieTitlePage(exchange);
-            } else {
-                exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
-            }
-        } else if (POST_METHOD.equals(exchange.getRequestMethod())) {
-            if (exchange.getRequestURI().toString().equals("/purchase")) {
-                validatePurchase(exchange);
-            }
-        } else {
-            exchange.sendResponseHeaders(METHOD_NOT_ALLOWED, -1);
-        }
-    }
-
-    private void generateMainPage(HttpExchange exchange) throws IOException {
-        final Headers headers = exchange.getResponseHeaders();
-        headers.set("Content-Type", String.format("application/json; charset=%s", CHARSET));
-        sendResponseBody(exchange, dayProgramming.getTopMoviesToJson().getBytes(CHARSET));
-    }
-
-    private void generateMovieTitlePage(HttpExchange exchange) throws IOException {
-        Map.Entry<String, String> name = getParamsToMap(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
-        if (name.getKey().equalsIgnoreCase("name")) {
-            final Movie movie = dayProgramming.getMovieByName(name.getValue().toLowerCase());
-            if (movie != null) {
-                final Headers headers = exchange.getResponseHeaders();
-                headers.set("Content-Type", String.format("application/json; charset=%s", CHARSET));
-                sendResponseBody(exchange, dayProgramming.getMovieTitleToJson(movie).getBytes(CHARSET));
-            }
-        }
-        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
-    }
-
-    private void generateTicketsPage(HttpExchange exchange) throws IOException {
-        Map<String, String> query = getParamsToMap(exchange.getRequestURI().getQuery());
-        if (query.size() == 2 && query.containsKey("hall") && query.containsKey("time")) {
-            String response = dayProgramming.getTicketsToJson(query);
-            if (response != null) {
-                final Headers headers = exchange.getResponseHeaders();
-                headers.set("Content-Type", String.format("application/json; charset=%s", CHARSET));
-                sendResponseBody(exchange, response.getBytes(CHARSET));
-            }
-        }
-        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
-    }
-
-    private void validatePurchase(HttpExchange exchange) throws IOException {
-        Map<String, String> post = getParamsToMap(new String(exchange.getRequestBody().readAllBytes()));
-        if (post.size() == 3 && post.containsKey("seat") &&
-                post.containsKey("hall") && post.containsKey("time")) {
-            try {
-                int time = Integer.parseInt(post.get("time"));
-                dayProgramming.getHallByName(post.get("hall")).getSchedule().getTickets().get(time).chooseSeat(post.get("seat"));
-                sendResponseBody(exchange, "{\"success\": true}\n".getBytes(CHARSET));
-            } catch (RuntimeException e) {
-                sendResponseBody(exchange, e.getMessage().getBytes(CHARSET));
-            }
-        }
-        exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
-    }
-
-    private Map<String, String> getParamsToMap(String params) {
+    protected Map<String, String> getParamsToMap(String params) {
         if (params == null || params.isEmpty()) {
             return null;
         }
@@ -110,7 +34,7 @@ public class ProjectHttpHandler implements HttpHandler {
         return result;
     }
 
-    private void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
+    protected void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
         exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
         OutputStream out = exchange.getResponseBody();
         out.write(rawResponse);
