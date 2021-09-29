@@ -18,21 +18,21 @@ public class Server {
     private static final String ticketsPage = "/tickets";
     private static final String purchasePage = "/purchase";
 
-    public static void main(String[] args) {
-        HttpServer httpserver;
-        System.out.println(System.getProperty("file.encoding"));
+    public static void main(String[] args) throws IOException {
+        HttpServer httpserver = HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
+
         DayProgramming todayDayProgramming = new DayProgramming(hardcodeBlock());
-        ProjectHttpHandler handler = new ProjectHttpHandler(todayDayProgramming);
-        try {
-            httpserver = HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
-            httpserver.createContext(mainPage, handler);
-            httpserver.createContext(purchasePage, handler);
-            httpserver.createContext(moviesSearchPage, handler);
-            httpserver.createContext(ticketsPage, handler);
-            httpserver.start();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+
+        MainPageHandler mainPageHandler = new MainPageHandler(todayDayProgramming);
+        MoviesSearchPageHandler moviesSearchPageHandler = new MoviesSearchPageHandler(todayDayProgramming);
+        TicketsPageHandler ticketsPageHandler = new TicketsPageHandler(todayDayProgramming);
+        PurchasePageHandler purchasePageHandler = new PurchasePageHandler(todayDayProgramming);
+
+        httpserver.createContext(mainPage, mainPageHandler);
+        httpserver.createContext(moviesSearchPage, moviesSearchPageHandler);
+        httpserver.createContext(purchasePage, purchasePageHandler);
+        httpserver.createContext(ticketsPage, ticketsPageHandler);
+        httpserver.start();
     }
 
     private static Set<Hall> hardcodeBlock() {

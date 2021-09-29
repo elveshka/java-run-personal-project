@@ -14,7 +14,7 @@ public class Schedule {
     }
 
     public void addSession(int time, Movie movie, int size) {
-        if (time >= 0 && time <= 23) {
+        if (sessions.containsKey(time)) {
             if (sessions.get(time) == null) {
                 sessions.put(time, movie);
                 tickets.put(time, new SessionTickets(size));

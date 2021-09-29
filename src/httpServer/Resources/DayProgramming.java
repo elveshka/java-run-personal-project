@@ -39,22 +39,23 @@ public class DayProgramming {
     }
 
     public String getTopMoviesToJson() {
-        StringBuilder response = new StringBuilder();
-
-        response.append("{\n");
+        String response = "{\n";
         for (Movie movie : topMovies) {
-            response.append("\"movie_name\": \"").append(movie.getName())
-                    .append("\",\n");
+            response = String.join("",
+                    response,
+                    String.format("\t\"movie_name\": \"%s\",\n", movie.getName()));
         }
-        response.append("}");
-        return response.toString();
+        response = String.join("", response, "}\n");
+        return response;
     }
 
     public String getMovieTitleToJson(Movie movie) {
         StringBuilder response = new StringBuilder();
         Map<Integer, Movie> ses;
+
         response.append(movie.getTitleToJsonString());
         response.append("{\n");
+
         for (Hall hall : halls) {
             ses = hall.getSchedule().getSessions();
             for (int time : ses.keySet()) {
@@ -69,6 +70,7 @@ public class DayProgramming {
             }
             response.append("},\n");
         }
+
         return response.toString();
     }
 

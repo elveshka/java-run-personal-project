@@ -8,17 +8,13 @@ public class SessionTickets {
     public SessionTickets(int size) {
         size = Math.min(size, 10);
         seats = new Integer[size][size];
-        for (Integer[] rows : seats) {
-            for (Integer seat : rows) {
-                seat = null;
-            }
-        }
         this.size = size;
         tickets = size * size;
     }
 
     public void chooseSeat(String seatNum) {
         int row, column;
+
         try {
             row = Rows.valueOf(seatNum.toUpperCase().substring(0, 1)).row;
             column = Integer.parseInt(seatNum.substring(1));
@@ -28,6 +24,7 @@ public class SessionTickets {
         } catch (IllegalArgumentException exception) {
             throw new WrongSeatNameException();
         }
+
         if (seats[row][column - 1] != null) {
             throw new SeatNotAvailable();
         } else {
@@ -75,13 +72,13 @@ public class SessionTickets {
 
     private static class WrongSeatNameException extends RuntimeException {
         WrongSeatNameException() {
-            super("Wrong seat name\n");
+            super("Wrong seat name");
         }
     }
 
     private static class SeatNotAvailable extends RuntimeException {
         SeatNotAvailable() {
-            super("Seat is taken\n");
+            super("Seat is taken");
         }
     }
 
