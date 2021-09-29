@@ -61,10 +61,9 @@ public class DayProgramming {
             for (int time : ses.keySet()) {
                 if (ses.get(time) != null) {
                     if (ses.get(time).getName().equals(movie.getName())) {
-                        response.append("\t\"hall_name\": \"")
-                                .append(hall.getHallName()).append("\",")
-                                .append("\"time\": \"")
-                                .append(time).append(":00\"\n");
+                        response.append(
+                                String.format("\t\"hall_name\": \"%s\",\"time\": \"%d:00\"\n",
+                                        hall.getHallName(), time));
                     }
                 }
             }
