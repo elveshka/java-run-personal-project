@@ -18,9 +18,9 @@ public class MoviesSearchPageHandler extends ProjectHttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if (GET_METHOD.equals(exchange.getRequestMethod())) {
-            Map.Entry<String, String> name = getParamsToMap(exchange.getRequestURI().getQuery()).entrySet().iterator().next();
-            if (name.getKey().equalsIgnoreCase("name")) {
-                final Movie movie = dayProgramming.getMovieByName(name.getValue().toLowerCase());
+            Map<String, String> query = getParamsToMap(exchange.getRequestURI().getQuery());
+            if (query.size() == 1 && query.containsKey("name")) {
+                final Movie movie = dayProgramming.getMovieByName(query.get("name").toLowerCase());
                 if (movie != null) {
                     final Headers headers = exchange.getResponseHeaders();
                     headers.set("Content-Type", String.format("application/json; CHARSET_UTF_8=%s", UTF_8));
