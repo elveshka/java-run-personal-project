@@ -1,9 +1,9 @@
 package httpServer.Resources;
 
 public class Movie {
-    private String name;
-    private int year;
-    private String director;
+    private final String name;
+    private final int year;
+    private final String director;
 
     public Movie(String name, int year, String director) {
         this.name = name;
@@ -23,40 +23,15 @@ public class Movie {
         return director;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public String getTitleToJsonResponseToString() {
-        DataBase db = DataBase.getDb();
-        String str = "{" +
-                "\"" + "movie_name" + "\"" +
-                ":" +
-                "\"" + getName() + "\"" + "," +
-                "\"" + "year" + "\"" +
-                ":" +
-                "\"" + getYear() + "\"" + "," +
-                "\"" + "director" + "\"" +
-                ":" +
-                "\"" + getDirector() + "\"" + "," +
-                "\"" + "session_time" + "\"" +
-                ":" +
-                "\"" + db.getSchedule().getMovieSessionTime(this.name) + "\"" + "," +
-                "\"" + "hall_name" + "\"" +
-                ":" +
-                "\"" + db.getSchedule().getHallByMovie(this.name).getHallName() + "\"" + "," +
-                "\"" + "available_tickets" + "\"" +
-                ":" +
-                "\"" + db.getSchedule().getHallByMovie(this.name).getVacantSeats() + "\"" + "," +
-                "}";
+    public String getTitleToJsonString() {
+        String str = "{\n" +
+                "\t\"movie_name\": \"" +
+                getName() + "\",\n" +
+                "\t\"year\": \"" +
+                getYear() + "\",\n" +
+                "\t\"director\": \"" +
+                getDirector() + "\",\n" +
+                "},\n";
         return str;
     }
 }
