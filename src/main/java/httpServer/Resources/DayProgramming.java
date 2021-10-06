@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+
 public class DayProgramming {
     private final Set<Hall> halls = new HashSet<>();
     private final Set<Movie> topMovies = new HashSet<>();
@@ -50,19 +51,18 @@ public class DayProgramming {
 
     public String getMovieTitleToJson(Movie movie) {
         StringBuilder response = new StringBuilder();
-        Map<Integer, Movie> ses;
+        Map<Integer, Movie> session;
 
         response.append(movie.getTitleToJsonString());
         response.append("{\n");
 
         for (Hall hall : halls) {
-            ses = hall.getSchedule().getSessions();
-            for (int time : ses.keySet()) {
-                if (ses.get(time) != null) {
-                    if (ses.get(time).getName().equals(movie.getName())) {
-                        response.append(
-                                String.format("\t\"hall_name\": \"%s\",\"time\": \"%d:00\"\n",
-                                        hall.getHallName(), time));
+            session = hall.getSchedule().getSessions();
+            for (int time : session.keySet()) {
+                if (session.get(time) != null) {
+                    if (session.get(time).getName().equals(movie.getName())) {
+                        response.append(String.format("\t\"hall_name\": \"%s\",\"time\": \"%d:00\"\n",
+                                hall.getHallName(), time));
                     }
                 }
             }
@@ -73,7 +73,7 @@ public class DayProgramming {
     }
 
     public String getTicketsToJson(Map<String, String> query) {
-        int time = Integer.parseInt(query.get("time"));
+        Integer time = Integer.parseInt(query.get("time"));
         for (Hall hall : halls) {
             if (hall.getHallName().equalsIgnoreCase(query.get("hall"))) {
                 if (hall.getSchedule().getSessions().get(time) != null) {

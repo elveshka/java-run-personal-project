@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public abstract class ProjectHttpHandler implements HttpHandler {
 
     protected Map<String, String> getParamsToMap(String params) {
         if (params == null || params.isEmpty()) {
-            return null;
+            return Collections.emptyMap();
         }
         final Map<String, String> result = new HashMap<>();
         for (String param : params.split("&")) {

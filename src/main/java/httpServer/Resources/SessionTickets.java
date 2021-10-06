@@ -5,8 +5,10 @@ public class SessionTickets {
     private final int size;
     private Integer tickets;
 
+    private static final int MAX_HALL_SIZE = 10;
+
     public SessionTickets(int size) {
-        size = Math.min(size, 10);
+        size = Math.min(size, MAX_HALL_SIZE);
         seats = new Integer[size][size];
         this.size = size;
         tickets = size * size;
@@ -15,16 +17,12 @@ public class SessionTickets {
     public void chooseSeat(String seatNum) {
         int row, column;
 
-        try {
-            row = Rows.valueOf(seatNum.toUpperCase().substring(0, 1)).row;
-            column = Integer.parseInt(seatNum.substring(1));
-            if (column < 1 || column > size) {
-                throw new IllegalArgumentException();
-            }
-        } catch (IllegalArgumentException exception) {
+        row = Rows.valueOf(seatNum.toUpperCase().substring(0, 1)).row;
+        column = Integer.parseInt(seatNum.substring(1));
+
+        if (column < 1 || column > size) {
             throw new WrongSeatNameException();
         }
-
         if (seats[row][column - 1] != null) {
             throw new SeatNotAvailable();
         } else {
@@ -70,13 +68,13 @@ public class SessionTickets {
         }
     }
 
-    private static class WrongSeatNameException extends RuntimeException {
+    private static class WrongSeatNameException extends IllegalArgumentException {
         WrongSeatNameException() {
             super("Wrong seat name");
         }
     }
 
-    private static class SeatNotAvailable extends RuntimeException {
+    private static class SeatNotAvailable extends IllegalArgumentException {
         SeatNotAvailable() {
             super("Seat is taken");
         }
