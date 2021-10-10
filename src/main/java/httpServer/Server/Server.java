@@ -9,6 +9,7 @@ import httpServer.Resources.Schedule;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -17,12 +18,16 @@ public class Server {
     private static final String moviesSearchPage = "/movies/search";
     private static final String ticketsPage = "/tickets";
     private static final String purchasePage = "/purchase";
-
+    private static HttpServer httpserver;
     public static final Logger logger = Logger.getLogger(
             Server.class.getName());
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpserver = HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
+        try {
+            httpserver = HttpServer.create(new InetSocketAddress("localhost", Integer.parseInt(args[0])), 0);
+        } catch (NumberFormatException e) {
+            System.out.printf("Wrong port format %s", args[0]);
+        }
         DayProgramming todayDayProgramming = new DayProgramming(hardcodeBlock());
 
         MainPageHandler mainPageHandler = new MainPageHandler(todayDayProgramming);
@@ -36,12 +41,13 @@ public class Server {
         httpserver.createContext(ticketsPage, ticketsPageHandler);
         httpserver.start();
 
-        logger.info(String.format("Server start\n%s",
+        logger.info(String.format("Server start on port %s\n%s",
+                args[0],
                 System.getProperty("file.encoding")));
     }
 
-    private static Set<Hall> hardcodeBlock() {
-        Set<Hall> halls = new HashSet<>();
+    public static Set<Hall> hardcodeBlock() {
+        Set<Hall> halls = new LinkedHashSet<>();
         Hall a1 = new Hall("A1", 10);
         Hall b1 = new Hall("B1", 7);
         Schedule schedule1 = new Schedule();
@@ -64,5 +70,9 @@ public class Server {
         halls.add(b1);
 
         return halls;
+    }
+
+    public static HttpServer getHttpserver() {
+        return httpserver;
     }
 }
