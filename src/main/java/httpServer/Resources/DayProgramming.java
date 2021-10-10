@@ -1,12 +1,10 @@
 package httpServer.Resources;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class DayProgramming {
-    private final Set<Hall> halls = new HashSet<>();
+    private final Set<Hall> halls = new LinkedHashSet<>();
     private final Set<Movie> topMovies = new HashSet<>();
 
     public DayProgramming(Set<Hall> halls) {
