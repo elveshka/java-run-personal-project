@@ -32,6 +32,7 @@ public class MoviesSearchPageTest {
     public void generatePort() throws IOException {
         Random random = new Random();
         int port;
+
         for (; ; ) {
             port = random.nextInt(30000) + 1024;
             try {
@@ -41,9 +42,11 @@ public class MoviesSearchPageTest {
             } catch (IOException ignored) {
             }
         }
+
         Server.main(new String[]{
                 Integer.toString(port)
         });
+
         testUrl = HttpUrl
                 .parse(String.format("http://localhost:%d/movies/search", port));
     }
@@ -51,31 +54,6 @@ public class MoviesSearchPageTest {
     @After
     public void shutdownServer() {
         Server.getHttpserver().stop(0);
-    }
-
-    @Test
-    public void shouldAnswerToGetRequest() throws IOException {
-        String[] severalMovieNameCases = new String[]{"titanic", "Titanic", "TiTaNiC"};
-
-        for (String testMovie : severalMovieNameCases) {
-            String url = testUrl
-                    .newBuilder()
-                    .addQueryParameter("name", testMovie)
-                    .build()
-                    .toString();
-
-            Request request = new Request.Builder()
-                    .url(url)
-                    .build();
-
-            OkHttpClient client = new OkHttpClient();
-            Response response = client.newCall(request).execute();
-
-            int expected = response.code();
-            int actual = 200;
-
-            assertThat(expected).isEqualTo(actual);
-        }
     }
 
     @Test
@@ -99,6 +77,7 @@ public class MoviesSearchPageTest {
         String actual = dayProgramming.getMovieTitleToJson(movie);
         String expected = response.body().string();
 
+        response.body().close();
         assertThat(expected).isEqualTo(actual);
     }
 }
