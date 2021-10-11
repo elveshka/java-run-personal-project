@@ -8,19 +8,18 @@ import httpServer.Resources.Schedule;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
 public class Server {
+    public static final Logger logger = Logger.getLogger(
+            Server.class.getName());
     private static final String mainPage = "/";
     private static final String moviesSearchPage = "/movies/search";
     private static final String ticketsPage = "/tickets";
     private static final String purchasePage = "/purchase";
     private static HttpServer httpserver;
-    public static final Logger logger = Logger.getLogger(
-            Server.class.getName());
 
     public static void main(String[] args) throws IOException {
         try {
