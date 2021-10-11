@@ -35,11 +35,16 @@ public abstract class ProjectHttpHandler implements HttpHandler {
         return result;
     }
 
-    protected void sendResponseBody(HttpExchange exchange, byte[] rawResponse) throws IOException {
-        exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
-        OutputStream out = exchange.getResponseBody();
-        out.write(rawResponse);
-        out.flush();
-        System.out.printf("status code %4d, %8d bytes send\n", STATUS_OK, rawResponse.length);
+    protected void sendResponseBody(HttpExchange exchange, byte[] rawResponse) {
+        try {
+            exchange.sendResponseHeaders(STATUS_OK, rawResponse.length);
+            OutputStream out = exchange.getResponseBody();
+            out.write(rawResponse);
+            out.flush();
+        } catch (IOException e) {
+            Server.logger.warning(
+                    String.format("Send response exception:\n%s", e.getMessage())
+            );
+        }
     }
 }
