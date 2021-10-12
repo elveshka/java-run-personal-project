@@ -21,12 +21,17 @@ public class Server {
     private static final String purchasePage = "/purchase";
     private static HttpServer httpserver;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
-            httpserver = HttpServer.create(new InetSocketAddress("localhost", Integer.parseInt(args[0])), 0);
+            httpserver = HttpServer.create(
+                    new InetSocketAddress(
+                            "localhost", Integer.parseInt(args[0])), 0);
         } catch (NumberFormatException e) {
             System.out.printf("Wrong port format %s", args[0]);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
         DayProgramming todayDayProgramming = new DayProgramming(hardcodeBlock());
 
         MainPageHandler mainPageHandler = new MainPageHandler(todayDayProgramming);

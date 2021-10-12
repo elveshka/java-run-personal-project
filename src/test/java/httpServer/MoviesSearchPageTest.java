@@ -29,7 +29,7 @@ public class MoviesSearchPageTest {
     }
 
     @Before
-    public void generatePort() throws IOException {
+    public void generatePort() {
         Random random = new Random();
         int port;
 
@@ -75,9 +75,10 @@ public class MoviesSearchPageTest {
 
         Movie movie = dayProgramming.getMovieByName(testMovie);
         String actual = dayProgramming.getMovieTitleToJson(movie);
-        String expected = response.body().string();
 
+        String expected = response.body().string();
         response.body().close();
+
         assertThat(expected).isEqualTo(actual);
     }
 }
