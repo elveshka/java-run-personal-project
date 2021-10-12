@@ -79,6 +79,6 @@ public class MoviesSearchPageTest {
         String expected = response.body().string();
         response.body().close();
 
-        assertThat(expected).isEqualTo(actual);
+        assertThat(actual).isEqualTo(expected);
     }
 }
