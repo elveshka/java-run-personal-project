@@ -5,7 +5,9 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import httpServer.Resources.DayProgramming;
+import httpServer.Resources.Hall;
 import httpServer.Resources.Movie;
+import httpServer.Resources.Schedule;
 import httpServer.Server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -13,23 +15,28 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.LinkedHashSet;
 import java.util.Random;
-import java.util.Scanner;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MoviesSearchPageTest {
 
-    private static DayProgramming dayProgramming;
     private HttpUrl testUrl;
     private Server sutServer;
-//    @BeforeClass
-//    public static void initDataBase() {
-//        dayProgramming = new DayProgramming(Server.hardcodeBlock());
-//    }
+    private DayProgramming testProgramming;
 
-    @Before
-    public void generatePort() {
+    private void initDataBase(Hall testHall, Movie testMovie, int time) {
+        Set<Hall> halls = new LinkedHashSet<>();
+        Schedule testSchedule = new Schedule();
+        testSchedule.addSession(time, testMovie, testHall.getHallSize());
+        testHall.setSchedule(testSchedule);
+        halls.add(testHall);
+        testProgramming = new DayProgramming(halls);
+    }
+
+    private int generatePort() {
         Random random = new Random();
         int port;
 
@@ -42,22 +49,10 @@ public class MoviesSearchPageTest {
             } catch (IOException ignored) {
             }
         }
-
-        sutServer = new Server(port);
-
-        testUrl = HttpUrl
-                .parse(String.format("http://localhost:%d/movies/search", port));
+        return port;
     }
 
-    @After
-    public void shutdownServer() {
-        sutServer.getHttpServer().stop(0);
-    }
-    
-    @Test
-    public void shouldTestGreenElephantMovie() throws IOException {
-        String testMovie = "green elephant";
-
+    private Response buildAndExecuteRequest(String testMovie) {
         String url = testUrl
                 .newBuilder()
                 .addQueryParameter("name", testMovie)
@@ -69,14 +64,48 @@ public class MoviesSearchPageTest {
                 .build();
 
         OkHttpClient client = new OkHttpClient();
-        Response response = client.newCall(request).execute();
+        try {
+            return client.newCall(request).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        Movie movie = dayProgramming.getMovieByName(testMovie);
-        String actual = dayProgramming.getMovieTitleToJson(movie);
+    @Before
+    public void setUp() {
+
+        int port = generatePort();
+        sutServer = new Server(port);
+        testUrl = HttpUrl
+                .parse(String.format("http://localhost:%d/movies/search", port));
+    }
+
+    @After
+    public void shutdownServer() {
+        sutServer.getHttpServer().stop(0);
+    }
+
+    @Test
+    public void shouldTestJsonResponse() throws IOException {
+        //given
+        String testMovie = "green elephant";
+        initDataBase(
+                new Hall("A1", 10),
+                new Movie(testMovie, 1999, "someone"),
+                21);
+        sutServer.setTodayDayProgramming(testProgramming);
+        sutServer.startServer();
+
+        //when
+        Response response = buildAndExecuteRequest(testMovie);
+
+        Movie movie = sutServer.getTodayDayProgramming().getMovieByName(testMovie);
+        String actual = sutServer.getTodayDayProgramming().getMovieTitleToJson(movie);
 
         String expected = response.body().string();
         response.body().close();
 
         assertThat(actual).isEqualTo(expected);
     }
+
 }
