@@ -19,38 +19,52 @@ public class Server {
     private static final String moviesSearchPage = "/movies/search";
     private static final String ticketsPage = "/tickets";
     private static final String purchasePage = "/purchase";
-    private static HttpServer httpserver;
+    private static final int defaultPort = 8080;
 
-    public static void main(String[] args) {
+    private final HttpServer httpServer;
+    private final MainPageHandler mainPageHandler;
+    private final MoviesSearchPageHandler moviesSearchPageHandler;
+    private final TicketsPageHandler ticketsPageHandler;
+    private final PurchasePageHandler purchasePageHandler;
+
+    public Server(int port) {
         try {
-            httpserver = HttpServer.create(
-                    new InetSocketAddress(
-                            "localhost", Integer.parseInt(args[0])), 0);
-        } catch (NumberFormatException e) {
-            System.out.printf("Wrong port format %s", args[0]);
+            httpServer = HttpServer.create(
+                    new InetSocketAddress("localhost", port), 0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         DayProgramming todayDayProgramming = new DayProgramming(hardcodeBlock());
 
-        MainPageHandler mainPageHandler = new MainPageHandler(todayDayProgramming);
-        MoviesSearchPageHandler moviesSearchPageHandler = new MoviesSearchPageHandler(todayDayProgramming);
-        TicketsPageHandler ticketsPageHandler = new TicketsPageHandler(todayDayProgramming);
-        PurchasePageHandler purchasePageHandler = new PurchasePageHandler(todayDayProgramming);
+        mainPageHandler = new MainPageHandler(todayDayProgramming);
+        moviesSearchPageHandler = new MoviesSearchPageHandler(todayDayProgramming);
+        ticketsPageHandler = new TicketsPageHandler(todayDayProgramming);
+        purchasePageHandler = new PurchasePageHandler(todayDayProgramming);
 
-        httpserver.createContext(mainPage, mainPageHandler);
-        httpserver.createContext(moviesSearchPage, moviesSearchPageHandler);
-        httpserver.createContext(purchasePage, purchasePageHandler);
-        httpserver.createContext(ticketsPage, ticketsPageHandler);
-        httpserver.start();
+        createContextToServer(httpServer);
 
-        logger.info(String.format("Server start on port %s\n%s",
-                args[0],
+        httpServer.start();
+        logger.info(String.format("Server start on port %s\nSystem encoding: %s",
+                port,
                 System.getProperty("file.encoding")));
     }
 
-    public static Set<Hall> hardcodeBlock() {
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            new Server(defaultPort);
+        } else {
+            try {
+                int port = Integer.parseInt(args[0]);
+                new Server(port);
+            } catch (NumberFormatException e) {
+                logger.warning(String.format("Wrong port format %s", args[0]));
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static Set<Hall> hardcodeBlock() {
         Set<Hall> halls = new LinkedHashSet<>();
         Hall a1 = new Hall("A1", 10);
         Hall b1 = new Hall("B1", 7);
@@ -76,7 +90,14 @@ public class Server {
         return halls;
     }
 
-    public static HttpServer getHttpserver() {
-        return httpserver;
+    private void createContextToServer(HttpServer httpserver) {
+        httpserver.createContext(mainPage, mainPageHandler);
+        httpserver.createContext(moviesSearchPage, moviesSearchPageHandler);
+        httpserver.createContext(purchasePage, purchasePageHandler);
+        httpserver.createContext(ticketsPage, ticketsPageHandler);
+    }
+
+    public HttpServer getHttpServer() {
+        return httpServer;
     }
 }

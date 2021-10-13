@@ -9,12 +9,12 @@ import httpServer.Resources.Movie;
 import httpServer.Server.Server;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Random;
+import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,11 +22,11 @@ public class MoviesSearchPageTest {
 
     private static DayProgramming dayProgramming;
     private HttpUrl testUrl;
-
-    @BeforeClass
-    public static void initDataBase() {
-        dayProgramming = new DayProgramming(Server.hardcodeBlock());
-    }
+    private Server sutServer;
+//    @BeforeClass
+//    public static void initDataBase() {
+//        dayProgramming = new DayProgramming(Server.hardcodeBlock());
+//    }
 
     @Before
     public void generatePort() {
@@ -43,9 +43,7 @@ public class MoviesSearchPageTest {
             }
         }
 
-        Server.main(new String[]{
-                Integer.toString(port)
-        });
+        sutServer = new Server(port);
 
         testUrl = HttpUrl
                 .parse(String.format("http://localhost:%d/movies/search", port));
@@ -53,9 +51,9 @@ public class MoviesSearchPageTest {
 
     @After
     public void shutdownServer() {
-        Server.getHttpserver().stop(0);
+        sutServer.getHttpServer().stop(0);
     }
-
+    
     @Test
     public void shouldTestGreenElephantMovie() throws IOException {
         String testMovie = "green elephant";
