@@ -22,10 +22,12 @@ public class Server {
     private static final int defaultPort = 8080;
 
     private final HttpServer httpServer;
-    private final MainPageHandler mainPageHandler;
-    private final MoviesSearchPageHandler moviesSearchPageHandler;
-    private final TicketsPageHandler ticketsPageHandler;
-    private final PurchasePageHandler purchasePageHandler;
+    private final int port;
+    private MainPageHandler mainPageHandler;
+    private MoviesSearchPageHandler moviesSearchPageHandler;
+    private TicketsPageHandler ticketsPageHandler;
+    private PurchasePageHandler purchasePageHandler;
+    private DayProgramming todayDayProgramming = null;
 
     public Server(int port) {
         try {
@@ -34,20 +36,7 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        DayProgramming todayDayProgramming = new DayProgramming(hardcodeBlock());
-
-        mainPageHandler = new MainPageHandler(todayDayProgramming);
-        moviesSearchPageHandler = new MoviesSearchPageHandler(todayDayProgramming);
-        ticketsPageHandler = new TicketsPageHandler(todayDayProgramming);
-        purchasePageHandler = new PurchasePageHandler(todayDayProgramming);
-
-        createContextToServer(httpServer);
-
-        httpServer.start();
-        logger.info(String.format("Server start on port %s\nSystem encoding: %s",
-                port,
-                System.getProperty("file.encoding")));
+        this.port = port;
     }
 
     public static void main(String[] args) {
@@ -90,6 +79,24 @@ public class Server {
         return halls;
     }
 
+    public void startServer() {
+        if (todayDayProgramming == null) {
+            todayDayProgramming = new DayProgramming(hardcodeBlock());
+        }
+
+        mainPageHandler = new MainPageHandler(todayDayProgramming);
+        moviesSearchPageHandler = new MoviesSearchPageHandler(todayDayProgramming);
+        ticketsPageHandler = new TicketsPageHandler(todayDayProgramming);
+        purchasePageHandler = new PurchasePageHandler(todayDayProgramming);
+
+        createContextToServer(httpServer);
+
+        httpServer.start();
+        logger.info(String.format("Server start on port %s\nSystem encoding: %s",
+                port,
+                System.getProperty("file.encoding")));
+    }
+
     private void createContextToServer(HttpServer httpserver) {
         httpserver.createContext(mainPage, mainPageHandler);
         httpserver.createContext(moviesSearchPage, moviesSearchPageHandler);
@@ -99,5 +106,13 @@ public class Server {
 
     public HttpServer getHttpServer() {
         return httpServer;
+    }
+
+    public DayProgramming getTodayDayProgramming() {
+        return todayDayProgramming;
+    }
+
+    public void setTodayDayProgramming(DayProgramming dayProgramming) {
+        this.todayDayProgramming = dayProgramming;
     }
 }
