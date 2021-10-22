@@ -18,13 +18,11 @@ public class TicketsPageHandler extends ProjectHttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         if (GET_METHOD.equals(exchange.getRequestMethod())) {
             Map<String, String> query = getParamsToMap(exchange.getRequestURI().getQuery());
-            if (query.size() == 2 && query.containsKey("hall") && query.containsKey("time")) {
-                String response = dayProgramming.getTicketsToJson(query);
-                if (response != null) {
-                    final Headers headers = exchange.getResponseHeaders();
-                    headers.set("Content-Type", String.format("application/json; CHARSET_UTF_8=%s", UTF_8));
-                    sendResponseBody(exchange, response.getBytes(UTF_8));
-                }
+            String response = dayProgramming.getTicketsToJson(query);
+            if (query.size() == 2 && response != null) {
+                final Headers headers = exchange.getResponseHeaders();
+                headers.set("Content-Type", String.format("application/json; CHARSET_UTF_8=%s", UTF_8));
+                sendResponseBody(exchange, response.getBytes(UTF_8));
             }
             exchange.sendResponseHeaders(PAGE_NOT_FOUND, -1);
         }

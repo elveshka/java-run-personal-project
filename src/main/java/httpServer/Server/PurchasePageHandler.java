@@ -23,7 +23,7 @@ public class PurchasePageHandler extends ProjectHttpHandler {
                     int time = Integer.parseInt(post.get("time"));
                     dayProgramming.getHallByName(post.get("hall")).getSchedule().getTickets().get(time).chooseSeat(post.get("seat"));
                     sendResponseBody(exchange, "{\"success\": true}\n".getBytes(UTF_8));
-                } catch (RuntimeException e) {
+                } catch (IllegalArgumentException e) {
                     sendResponseBody(exchange, e.getMessage().getBytes(UTF_8));
                 }
             }
