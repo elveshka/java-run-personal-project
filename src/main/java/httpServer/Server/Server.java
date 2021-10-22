@@ -37,6 +37,7 @@ public class Server {
             throw new RuntimeException(e);
         }
         this.port = port;
+        startServer();
     }
 
     public static void main(String[] args) {
