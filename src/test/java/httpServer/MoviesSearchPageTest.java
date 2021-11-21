@@ -107,5 +107,4 @@ public class MoviesSearchPageTest {
 
         assertThat(actual).isEqualTo(expected);
     }
-
 }

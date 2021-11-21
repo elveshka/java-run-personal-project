@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class DayProgramming {
+public class
+DayProgramming {
     private final Set<Hall> halls = new LinkedHashSet<>();
     private final Set<Movie> topMovies = new HashSet<>();
 
