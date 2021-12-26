@@ -37,12 +37,11 @@ public class Server {
             throw new RuntimeException(e);
         }
         this.port = port;
-        startServer();
     }
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            new Server(defaultPort);
+            new Server(defaultPort).startServer();
         } else {
             try {
                 int port = Integer.parseInt(args[0]);
